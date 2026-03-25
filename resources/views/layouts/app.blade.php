@@ -8,33 +8,56 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Css -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Scripts -->
+    <!-- Custom CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body>
-    <div class="min-vh-100 bg-light pb-2">
-        @include('layouts.navigation')
+<body class="bg-light">
+    <!-- Navigation -->
+    @include('layouts.navigation')
 
-        <!-- Page Heading -->
-        @isset($header)
-            <header class="bg-white shadow-sm">
-                <div class="container py-4">
-                    {{ $header }}
-                </div>
-            </header>
-        @endisset
+    <!-- Page Heading -->
+    @isset($header)
+        <header class="bg-white shadow-sm">
+            <div class="container-fluid py-4">
+                {{ $header }}
+            </div>
+        </header>
+    @endisset
 
-        <!-- Page Content -->
-        <main class="container">
+    <!-- Main Content -->
+    <main class="py-4">
+        @yield('content')
+        @isset($slot)
             {{ $slot }}
-        </main>
-    </div>
+        @endisset
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>{{ config('app.name', 'Laravel') }}</h5>
+                    <p>Plateforme de formation en ligne</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p>&copy; {{ date('Y') }} {{ config('app.name', 'Laravel') }}. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom Scripts -->
     <script>
+        // Custom JavaScript for authenticated layout
         let myModalEl = document.querySelector('[data-modal="1"]');
         if (myModalEl) {
             const myModal = new bootstrap.Modal(myModalEl);

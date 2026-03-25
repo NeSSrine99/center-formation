@@ -4,11 +4,16 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FormateurController;
 use App\Http\Controllers\ApprenantController;
+use App\Http\Controllers\FrontController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [FrontController::class, 'index'])->name('home');
+Route::get('/courses', [FrontController::class, 'courses'])->name('courses');
+Route::get('/courses/{id}', [FrontController::class, 'courseDetail'])->name('course.detail');
+Route::get('/about', [FrontController::class, 'about'])->name('about');
+Route::get('/contact', [FrontController::class, 'contact'])->name('contact');
+Route::post('/contact', [FrontController::class, 'storeContact'])->name('contact.store');
+Route::get('/instructor/{id}', [FrontController::class, 'instructor'])->name('instructor');
 
 Route::get('/dashboard', function () {
     $user = auth()->user();
@@ -31,6 +36,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.update-user');
     Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete-user');
     Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
+
+    // Admin trainings and sessions
+    Route::get('/admin/formations', [AdminController::class, 'formations'])->name('admin.formations');
+    Route::get('/admin/formations/create', [AdminController::class, 'createFormation'])->name('admin.create-formation');
+    Route::post('/admin/formations', [AdminController::class, 'storeFormation'])->name('admin.store-formation');
+    Route::get('/admin/formations/{id}/edit', [AdminController::class, 'editFormation'])->name('admin.edit-formation');
+    Route::put('/admin/formations/{id}', [AdminController::class, 'updateFormation'])->name('admin.update-formation');
+    Route::delete('/admin/formations/{id}', [AdminController::class, 'deleteFormation'])->name('admin.delete-formation');
+
+    Route::get('/admin/sessions', [AdminController::class, 'sessions'])->name('admin.sessions');
+    Route::get('/admin/sessions/create', [AdminController::class, 'createSession'])->name('admin.create-session');
+    Route::post('/admin/sessions', [AdminController::class, 'storeSession'])->name('admin.store-session');
+    Route::get('/admin/sessions/{id}/edit', [AdminController::class, 'editSession'])->name('admin.edit-session');
+    Route::put('/admin/sessions/{id}', [AdminController::class, 'updateSession'])->name('admin.update-session');
+    Route::delete('/admin/sessions/{id}', [AdminController::class, 'deleteSession'])->name('admin.delete-session');
 
     Route::get('/formateur/dashboard', [FormateurController::class, 'dashboard'])->name('formateur.dashboard');
     Route::get('/formateur/courses', [FormateurController::class, 'courses'])->name('formateur.courses');

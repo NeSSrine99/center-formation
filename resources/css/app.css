@@ -1,1 +1,265 @@
+/* Dashboard Gradient Background */
+body {
+    background: linear-gradient(135deg, #eef2ff, #f8f9ff);
+}
 
+/* Modern Card */
+.card {
+    border: none;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient Cards */
+.card-primary {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+}
+
+.card-info {
+    background: linear-gradient(135deg, #36d1dc, #5b86e5);
+    color: white;
+}
+
+.card-success {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    color: white;
+}
+
+.card-danger {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    color: white;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 10px;
+    transition: all 0.25s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Table Style */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table-hover tbody tr:hover {
+    background: #f3f4ff;
+}
+
+/* Smooth page animation */
+.container-fluid {
+    animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/*  Custom styles for admin dashboard */
+
+:root {
+    --indigo-500: #6366f1;
+    --indigo-600: #4f46e5;
+}
+
+.bg-indigo-500 {
+    background-color: var(--indigo-500);
+}
+
+.text-indigo-500 {
+    color: var(--indigo-500);
+}
+
+.btn-indigo-500 {
+    background-color: var(--indigo-500);
+    border-color: var(--indigo-500);
+    color: white;
+}
+
+.btn-indigo-500:hover {
+    background-color: var(--indigo-600);
+    border-color: var(--indigo-600);
+}
+
+/* Navbar Gradient */
+
+.custom-navbar {
+    background: linear-gradient(135deg, #5f2c82, #49a09d);
+    padding: 12px 20px;
+}
+
+/* Nav links */
+
+.nav-hover {
+    color: white !important;
+    font-weight: 500;
+    margin-right: 10px;
+    transition: 0.3s;
+}
+
+.nav-hover:hover {
+    color: #ffd369 !important;
+    transform: translateY(-1px);
+}
+
+.nav-hover.active {
+    color: #ffd369 !important;
+}
+
+/* Search */
+
+.search-input {
+    border-radius: 20px;
+    padding-left: 15px;
+    border: none;
+}
+
+/* Notification */
+
+.nav-icon {
+    color: white !important;
+    font-size: 18px;
+}
+
+.notification-badge {
+    position: absolute;
+    top: 2px;
+    right: -5px;
+    background: red;
+    color: white;
+    font-size: 10px;
+    border-radius: 50%;
+    padding: 3px 6px;
+}
+
+/* User */
+
+.user-btn {
+    display: flex;
+    align-items: center;
+    color: white !important;
+    font-weight: 500;
+}
+
+/* Avatar */
+
+.avatar {
+    width: 34px;
+    height: 34px;
+    background: white;
+    color: #5f2c82;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* Dropdown */
+
+.dropdown-menu {
+    border-radius: 12px;
+}
+
+/*   body */
+
+/* Page background */
+
+body {
+    background: #f4f6fb;
+}
+
+/* Cards */
+
+.card {
+    border: none;
+    border-radius: 12px;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Card header */
+
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+    font-weight: 600;
+}
+
+/* Table */
+
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table thead {
+    background: #f1f3f9;
+}
+
+.table tbody tr:hover {
+    background: #f8f9ff;
+}
+
+/* Buttons */
+
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+/* Badges */
+
+.badge {
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+/* Title */
+
+.dashboard-title {
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+/* Create button */
+
+.create-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+}
+
+.create-btn:hover {
+    opacity: 0.9;
+}
+
+/* Action buttons */
+
+.btn-warning {
+    color: white;
+}
+
+.btn-danger {
+    color: white;
+}

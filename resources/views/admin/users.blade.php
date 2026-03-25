@@ -1,15 +1,11 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="h5 mb-0">
-            {{ __('Gestion des Utilisateurs') }}
-        </h2>
-    </x-slot>
+<x-admin-layout>
+    @section('header', 'Gestion des Utilisateurs')
 
     <div class="container-fluid my-4">
         <div class="row">
             <div class="col-md-12">
                 <div class="card shadow-sm">
-                    <div class="card-header bg-dark text-white">
+                    <div class="card-header bg-primary text-white">
                         <h4 class="mb-0">Liste des Utilisateurs</h4>
                     </div>
 
@@ -17,7 +13,8 @@
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                 {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
                             </div>
                         @endif
 
@@ -29,7 +26,7 @@
 
                         <div class="table-responsive">
                             <table class="table table-striped table-hover">
-                                <thead class="table-dark">
+                                <thead class="table-primary">
                                     <tr>
                                         <th>#ID</th>
                                         <th>Nom</th>
@@ -46,7 +43,8 @@
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
                                             <td>
-                                                <span class="badge
+                                                <span
+                                                    class="badge
                                                 @if ($user->role === 'administrateur') bg-danger
                                                 @elseif($user->role === 'formateur') bg-info
                                                 @else bg-success @endif">
@@ -59,12 +57,13 @@
                                                     class="btn btn-sm btn-warning" title="Modifier">
                                                     <i class="bi bi-pencil-square"></i> Modifier
                                                 </a>
-                                                <form action="{{ route('admin.delete-user', $user->id) }}" method="POST"
-                                                    style="display:inline;"
+                                                <form action="{{ route('admin.delete-user', $user->id) }}"
+                                                    method="POST" style="display:inline;"
                                                     onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur?');">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger" title="Supprimer">
+                                                    <button type="submit" class="btn btn-sm btn-danger"
+                                                        title="Supprimer">
                                                         <i class="bi bi-trash"></i> Supprimer
                                                     </button>
                                                 </form>
@@ -85,4 +84,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-admin-layout>
