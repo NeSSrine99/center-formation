@@ -263,3 +263,49 @@ body {
 .btn-danger {
     color: white;
 }
+
+.admin-sidebar {
+    min-height: 100vh;
+    background-color: #212529;
+    padding-top: 20px;
+}
+
+.admin-sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    padding: 10px 12px;
+    transition: 0.3s;
+}
+
+.admin-sidebar .nav-link:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-sidebar .nav-link.active {
+    color: #fff;
+    background-color: #0d6efd;
+}
+
+.admin-sidebar .nav-item.text-uppercase {
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+/* //navbar dashboard */
+.navbar .dropdown-toggle::after {
+    display: none;
+}
+
+.navbar img {
+    object-fit: cover;
+    border: 2px solid #0d6efd;
+}
+
+.dropdown-menu {
+    border-radius: 12px;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}

@@ -18,12 +18,19 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        \App\Models\Role::firstOrCreate(['name' => 'administrateur'], ['description' => 'Admin full access']);
+        \App\Models\Role::firstOrCreate(['name' => 'formateur'], ['description' => 'Formation instructor']);
+        \App\Models\Role::firstOrCreate(['name' => 'apprenant'], ['description' => 'Student/learner']);
+
+        $adminRole = \App\Models\Role::where('name', 'administrateur')->first();
+
         User::create([
-        'name' => 'Admin',
-        'email' => 'admin@gmail.com',
-        'password' => Hash::make('12345678'),
-        'role' => 'administrateur',
-        'email_verified_at' => now(),
-    ]);
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('12345678'),
+            'role' => 'administrateur',
+            'role_id' => $adminRole->id,
+            'email_verified_at' => now(),
+        ]);
     }
 }

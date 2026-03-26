@@ -23,7 +23,8 @@ Route::get('/dashboard', function () {
     } elseif ($user->isFormateur()) {
         return redirect()->route('formateur.dashboard');
     } else {
-        return redirect()->route('apprenant.dashboard');
+        // Apprenant
+        return redirect()->route('home');  // <-- fix here
     }
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -61,6 +62,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/apprenant/courses', [ApprenantController::class, 'courses'])->name('apprenant.courses');
     Route::get('/apprenant/progress', [ApprenantController::class, 'progress'])->name('apprenant.progress');
     Route::get('/apprenant/materials', [ApprenantController::class, 'materials'])->name('apprenant.materials');
+    Route::get('/apprenant/inscriptions', [ApprenantController::class, 'inscriptions'])->name('apprenant.inscriptions');
+    Route::post('/apprenant/inscrire', [ApprenantController::class, 'inscrire'])->name('apprenant.inscrire');
 });
 
 Route::middleware('auth')->group(function () {

@@ -47,7 +47,8 @@
             <nav class="col-md-2 d-none d-md-block admin-sidebar text-white p-3">
                 <div class="d-flex flex-column">
                     <h5 class="text-white mb-4">
-                        <i class="bi bi-shield-check"></i> Admin Panel
+                        <i class="bi bi-shield-check"></i>
+                        {{ auth()->user()->isAdministrateur() ? 'Administration' : (auth()->user()->isFormateur() ? 'Espace Formateur' : 'Tableau de bord') }}
                     </h5>
 
                     <ul class="nav flex-column">
@@ -57,12 +58,42 @@
                                 <i class="bi bi-house-door"></i> Dashboard
                             </a>
                         </li>
-                        <li class="nav-item mb-2">
-                            <a class="nav-link {{ request()->routeIs('admin.users') ? 'active' : '' }}"
-                                href="{{ route('admin.users') }}">
-                                <i class="bi bi-people"></i> Utilisateurs
-                            </a>
-                        </li>
+
+                        @if (auth()->user()->isAdministrateur())
+                            <li class="nav-item mb-2">
+                                <a class="nav-link {{ request()->routeIs('admin.users') ? 'active' : '' }}"
+                                    href="{{ route('admin.users') }}">
+                                    <i class="bi bi-people"></i> Utilisateurs
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a class="nav-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}"
+                                    href="{{ route('admin.settings') }}">
+                                    <i class="bi bi-gear"></i> Paramètres
+                                </a>
+                            </li>
+                        @endif
+
+                        @if (auth()->user()->isFormateur())
+                            <li class="nav-item mb-2">
+                                <a class="nav-link {{ request()->routeIs('formateur.courses') ? 'active' : '' }}"
+                                    href="{{ route('formateur.courses') }}">
+                                    <i class="bi bi-journal-bookmark"></i> Mes Cours
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a class="nav-link {{ request()->routeIs('formateur.students') ? 'active' : '' }}"
+                                    href="{{ route('formateur.students') }}">
+                                    <i class="bi bi-people"></i> Mes Apprenants
+                                </a>
+                            </li>
+                            <li class="nav-item mb-2">
+                                <a class="nav-link {{ request()->routeIs('formateur.materials') ? 'active' : '' }}"
+                                    href="{{ route('formateur.materials') }}">
+                                    <i class="bi bi-folder2-open"></i> Matériel
+                                </a>
+                            </li>
+                        @endif
                         <li class="nav-item mb-2">
                             <a class="nav-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}"
                                 href="{{ route('admin.settings') }}">

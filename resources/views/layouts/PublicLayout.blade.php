@@ -44,10 +44,9 @@
     <!-- Navbar End -->
 
     <!-- Main Content -->
-    @include('front.pages.about')
-    @include('front.pages.courses')
-    @include('front.pages.team')
-    @include('front.pages.contact')
+    <main class="py-5">
+        @yield('content')
+    </main>
 
     <!-- Footer Start -->
     @include('front.components.footer')

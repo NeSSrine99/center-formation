@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Schema;
 
 class User extends Authenticatable
 {
@@ -22,7 +23,23 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'role_id',
     ];
+
+    public function roleInfo()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    public function formateur()
+    {
+        return $this->hasOne(Formateur::class);
+    }
+
+    public function apprenant()
+    {
+        return $this->hasOne(Apprenant::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -52,7 +69,23 @@ class User extends Authenticatable
      */
     public function hasRole(string $role): bool
     {
-        return $this->role === $role;
+        if ($this->role === $role) {
+            return true;
+        }
+
+        return Schema::hasTable('roles') && $this->roleInfo && $this->roleInfo->name === $role;
+    }
+
+    public function setRoleAttribute(string $value): void
+    {
+        $this->attributes['role'] = $value;
+
+        if (Schema::hasTable('roles')) {
+            $role = Role::where('name', $value)->first();
+            if ($role) {
+                $this->attributes['role_id'] = $role->id;
+            }
+        }
     }
 
     /**

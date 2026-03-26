@@ -16,6 +16,12 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
+        $user = auth()->user();
+
+        if ($user->isFormateur() && ! $user->isAdministrateur()) {
+            return redirect()->route('formateur.dashboard');
+        }
+
         return view('admin.dashboard');
     }
 

@@ -11,6 +11,7 @@ return new class extends Migration
         if (!Schema::hasTable('formateurs')) {
             Schema::create('formateurs', function (Blueprint $table) {
                 $table->id();
+                $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
                 $table->string('nom');
                 $table->string('prenom')->nullable();
                 $table->string('email')->unique();
@@ -23,6 +24,7 @@ return new class extends Migration
         if (!Schema::hasTable('apprenants')) {
             Schema::create('apprenants', function (Blueprint $table) {
                 $table->id();
+                $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
                 $table->string('nom');
                 $table->string('prenom')->nullable();
                 $table->string('email')->unique();

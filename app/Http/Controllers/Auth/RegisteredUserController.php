@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Apprenant;
+use App\Models\Formateur;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -42,6 +44,18 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'role' => $request->role,
         ]);
+
+        if ($user->role === 'apprenant') {
+            Apprenant::firstOrCreate(
+                ['user_id' => $user->id],
+                ['nom' => $user->name, 'email' => $user->email]
+            );
+        } elseif ($user->role === 'formateur') {
+            Formateur::firstOrCreate(
+                ['user_id' => $user->id],
+                ['nom' => $user->name, 'email' => $user->email]
+            );
+        }
 
         event(new Registered($user));
 

@@ -86,5 +86,32 @@
 
         </div>
 
+        @if (auth()->user()->isFormateur())
+            <div class="card shadow-lg mt-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Espace Formateur</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row gy-3">
+                        <div class="col-md-4">
+                            <a href="{{ route('formateur.courses') }}" class="btn btn-success w-100">
+                                <i class="bi bi-journal-text"></i> Mes cours
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ route('formateur.students') }}" class="btn btn-info w-100">
+                                <i class="bi bi-people"></i> Mes apprenants
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ route('formateur.materials') }}" class="btn btn-warning w-100">
+                                <i class="bi bi-folder2-open"></i> Mes supports
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
     </div>
 </x-admin-layout>

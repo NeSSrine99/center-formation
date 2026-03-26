@@ -16,8 +16,23 @@ class Apprenant extends Model
         return $this->hasMany(Inscription::class);
     }
 
-    public function sessions()
+    // public function sessions()
+    // {
+    //     return $this->belongsToMany(Session::class, 'inscriptions')->withPivot('statut', 'date_inscription')->withTimestamps();
+    // }
+
+    public function session()
+{
+    return $this->belongsTo(FormationSession::class, 'session_id');
+}
+
+public function formation()
+{
+    return $this->belongsTo(Formation::class);
+}
+
+    public function user()
     {
-        return $this->belongsToMany(Session::class, 'inscriptions')->withPivot('statut', 'date_inscription')->withTimestamps();
+        return $this->belongsTo(User::class);
     }
 }
