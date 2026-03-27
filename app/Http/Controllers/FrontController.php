@@ -11,7 +11,7 @@ class FrontController extends Controller
      */
     public function index()
     {
-        return view('front.pages.home');
+        return view('layout.PublicLayout');
     }
 
     /**

@@ -101,7 +101,7 @@
                             </a>
                         </li>
                         <li class="nav-item mb-2">
-                            <a class="nav-link" href="{{ route('dashboard') }}">
+                            <a class="nav-link" href="{{ route('home') }}">
                                 <i class="bi bi-arrow-left"></i> Retour au site
                             </a>
                         </li>
