@@ -9,27 +9,22 @@ class Apprenant extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nom', 'prenom', 'email', 'phone'];
+    protected $fillable = ['user_id', 'nom', 'prenom', 'email', 'phone'];
 
     public function inscriptions()
     {
         return $this->hasMany(Inscription::class);
     }
 
-    // public function sessions()
-    // {
-    //     return $this->belongsToMany(Session::class, 'inscriptions')->withPivot('statut', 'date_inscription')->withTimestamps();
-    // }
+    public function paiements()
+    {
+        return $this->hasMany(Paiement::class);
+    }
 
-    public function session()
-{
-    return $this->belongsTo(FormationSession::class, 'session_id');
-}
-
-public function formation()
-{
-    return $this->belongsTo(Formation::class);
-}
+    public function formation()
+    {
+        return $this->belongsTo(Formation::class);
+    }
 
     public function user()
     {

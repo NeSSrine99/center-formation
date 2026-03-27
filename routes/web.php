@@ -17,16 +17,21 @@ Route::get('/instructor/{id}', [FrontController::class, 'instructor'])->name('in
 
 Route::get('/dashboard', function () {
     $user = auth()->user();
-    
+
     if ($user->isAdministrateur()) {
         return redirect()->route('admin.dashboard');
     } elseif ($user->isFormateur()) {
         return redirect()->route('formateur.dashboard');
-    } else {
-        // Apprenant
-        return redirect()->route('home');  // <-- fix here
+    } elseif ($user->isApprenant()) {
+        return redirect()->route('apprenant.dashboard');
     }
+
+    return redirect('/')->with('error', 'Role non reconnu.');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/apprenant/dashboard', [ApprenantController::class, 'dashboard'])
+    ->middleware(['auth', 'verified'])
+    ->name('apprenant.dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
@@ -72,4 +77,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

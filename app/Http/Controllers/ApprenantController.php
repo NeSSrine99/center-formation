@@ -3,89 +3,41 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Formation;
-use App\Models\FormationSession;
 use App\Models\Inscription;
+use App\Models\Paiement;
 
 class ApprenantController extends Controller
 {
     /**
-     * Dashboard
+     * Display the apprenant dashboard.
      */
     public function dashboard()
     {
-        return view('apprenant.dashboard');
+        $user = Auth::user();
+
+        // تحقق من وجود Apprenant مرتبط بالمستخدم
+        $apprenant = $user->apprenant;
+
+        // الحصول على جميع الدورات التي شارك فيها
+        $myFormations = $apprenant
+            ? Formation::whereHas('sessions.inscriptions', function ($q) use ($apprenant) {
+                $q->where('apprenant_id', $apprenant->id);
+            })->get()
+            : collect();
+
+        // جميع التسجيلات
+        $inscriptions = $apprenant ? $apprenant->inscriptions()->with('session.formation')->get() : collect();
+
+        // جميع المدفوعات
+        $paiements = $apprenant ? $apprenant->paiements()->with('formation')->get() : collect();
+
+        return view('apprenant.dashboard', compact('myFormations', 'inscriptions', 'paiements'));
     }
 
     /**
-     * Mes Formations + Available + Sessions
-     */
-    public function inscriptions()
-    {
-        $apprenant = auth()->user()->apprenant;
-
-        if (!$apprenant) {
-            return redirect()->route('dashboard')
-                ->with('error', 'Profil apprenant non trouvé.');
-        }
-
-        // Formations inscrites (via sessions)
-        $inscriptions = $apprenant->inscriptions()
-            ->with('session.formation')
-            ->latest()
-            ->get();
-
-        // Formations disponibles
-        $formations = Formation::latest()->get();
-
-        // Sessions
-        $sessions = FormationSession::with('formation')->latest()->get();
-
-        return view('apprenant.formations', compact(
-            'inscriptions',
-            'formations',
-            'sessions'
-        ));
-    }
-
-    /**
-     * Inscription à une session
-     */
-    public function inscrire(Request $request)
-    {
-        $request->validate([
-            'session_id' => 'required|exists:formation_sessions,id',
-        ]);
-
-        $apprenant = auth()->user()->apprenant;
-
-        if (!$apprenant) {
-            return redirect()->route('dashboard')
-                ->with('error', 'Vous devez avoir un profil apprenant.');
-        }
-
-        // Vérifier inscription existante
-        $already = Inscription::where('apprenant_id', $apprenant->id)
-            ->where('session_id', $request->session_id)
-            ->exists();
-
-        if ($already) {
-            return back()->with('warning', 'Déjà inscrit à cette session.');
-        }
-
-        // Création inscription
-        Inscription::create([
-            'apprenant_id' => $apprenant->id,
-            'session_id' => $request->session_id,
-            'statut' => 'en_attente',
-            'date_inscription' => now(),
-        ]);
-
-        return back()->with('success', 'Inscription réussie 🎉');
-    }
-
-    /**
-     * Courses (optionnel)
+     * Show the list of courses.
      */
     public function courses()
     {
@@ -93,7 +45,7 @@ class ApprenantController extends Controller
     }
 
     /**
-     * Progress
+     * Show the progress of the apprenant.
      */
     public function progress()
     {
@@ -101,10 +53,18 @@ class ApprenantController extends Controller
     }
 
     /**
-     * Materials
+     * Show course materials.
      */
     public function materials()
     {
         return view('apprenant.materials');
+    }
+
+    /**
+     * Show inscriptions.
+     */
+    public function inscriptions()
+    {
+        return view('apprenant.inscriptions');
     }
 }
