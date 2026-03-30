@@ -9,13 +9,15 @@ class FormationSession extends Model
 {
     use HasFactory;
 
+    protected $table = 'sessions_formations';
+
     protected $fillable = [
         'formation_id',
-        'nom',
-        'start_date',
-        'end_date',
+        'date_debut',
+        'date_fin',
+        'lieu',
         'capacite',
-        'etat',
+        'statut',
     ];
 
     public function formation()

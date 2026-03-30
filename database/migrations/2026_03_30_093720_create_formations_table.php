@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('paiements', function (Blueprint $table) {
+        Schema::create('formations', function (Blueprint $table) {
             $table->id();
+            $table->string('titre');
+            $table->text('description')->nullable();
+            $table->integer('duree')->nullable();
+            $table->string('niveau')->nullable();
+            $table->decimal('tarif', 10, 2)->default(0);
             $table->timestamps();
         });
     }
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('paiements');
+        Schema::dropIfExists('formations');
     }
 };

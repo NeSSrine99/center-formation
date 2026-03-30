@@ -24,15 +24,21 @@
                     </div>
 
                     <div class="row g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label">Durée (jours)</label>
-                            <input type="number" name="duree_jours" class="form-control" min="1"
-                                value="{{ old('duree_jours', $formation->duree_jours) }}">
+                            <input type="number" name="duree" class="form-control" min="1"
+                                value="{{ old('duree', $formation->duree) }}">
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Prix</label>
-                            <input type="number" step="0.01" name="prix" class="form-control"
-                                value="{{ old('prix', $formation->prix) }}">
+                        <div class="col-md-3">
+                            <label class="form-label">Niveau</label>
+                            <input type="text" name="niveau" class="form-control"
+                                value="{{ old('niveau', $formation->niveau) }}"
+                                placeholder="ex: Débutant, Intermédiaire">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Tarif</label>
+                            <input type="number" step="0.01" name="tarif" class="form-control"
+                                value="{{ old('tarif', $formation->tarif) }}">
                         </div>
                     </div>
 
@@ -41,17 +47,7 @@
                         <select name="formateur_ids[]" class="form-control" multiple>
                             @foreach ($formateurs as $formateur)
                                 <option value="{{ $formateur->id }}" @if ($formation->formateurs->contains($formateur->id)) selected @endif>
-                                    {{ $formateur->nom }} ({{ $formateur->email }})</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="mt-3">
-                        <label class="form-label">Sessions</label>
-                        <select name="session_ids[]" class="form-control" multiple>
-                            @foreach ($sessions as $session)
-                                <option value="{{ $session->id }}" @if ($formation->sessions->contains($session->id)) selected @endif>
-                                    {{ $session->nom }}</option>
+                                    {{ $formateur->user->name }}</option>
                             @endforeach
                         </select>
                     </div>

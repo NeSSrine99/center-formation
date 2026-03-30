@@ -45,10 +45,10 @@
                                             <td>
                                                 <span
                                                     class="badge
-                                                @if ($user->role === 'administrateur') bg-danger
-                                                @elseif($user->role === 'formateur') bg-info
+                                                @if ($user->role->name === 'administrateur') bg-danger
+                                                @elseif($user->role->name === 'formateur') bg-info
                                                 @else bg-success @endif">
-                                                    {{ ucfirst($user->role) }}
+                                                    {{ ucfirst($user->role->name) }}
                                                 </span>
                                             </td>
                                             <td>{{ $user->created_at->format('Y-m-d H:i') }}</td>

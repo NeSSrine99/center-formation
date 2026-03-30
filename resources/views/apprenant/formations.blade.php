@@ -20,7 +20,7 @@
                             <div class="card shadow-sm mb-4">
                                 <div
                                     class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">{{ $formation->title }}</h5>
+                                    <h5 class="mb-0">{{ $formation->titre }}</h5>
                                     <span class="badge bg-light text-primary">
                                         {{ $formation->sessions->count() }} Sessions
                                     </span>
@@ -36,11 +36,13 @@
                                                 <li
                                                     class="list-group-item d-flex justify-content-between align-items-center">
                                                     <div>
-                                                        <strong>{{ $session->title }}</strong>
+                                                        <strong>Session - {{ $session->formation->titre }}</strong>
                                                         <br>
                                                         <small class="text-muted">
-                                                            Du {{ $session->start_date->format('d/m/Y') }} au
-                                                            {{ $session->end_date->format('d/m/Y') }}
+                                                            Du
+                                                            {{ \Carbon\Carbon::parse($session->date_debut)->format('d/m/Y') }}
+                                                            au
+                                                            {{ \Carbon\Carbon::parse($session->date_fin)->format('d/m/Y') }}
                                                         </small>
                                                     </div>
 
@@ -76,8 +78,8 @@
 
                                     <!-- Formation Details -->
                                     <div class="d-flex justify-content-between align-items-center mt-2">
-                                        <span class="text-muted">Prix: €{{ number_format($formation->price, 2) }}</span>
-                                        <span class="text-muted">Durée: {{ $formation->duration }} heures</span>
+                                        <span class="text-muted">Tarif: {{ number_format($formation->tarif, 2) }} DH</span>
+                                        <span class="text-muted">Durée: {{ $formation->duree }} jours</span>
                                     </div>
                                 </div>
                             </div>

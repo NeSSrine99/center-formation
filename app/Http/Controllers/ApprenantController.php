@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Formation;
 use App\Models\Inscription;
-use App\Models\Paiement;
 
 class ApprenantController extends Controller
 {
@@ -30,10 +29,7 @@ class ApprenantController extends Controller
         // جميع التسجيلات
         $inscriptions = $apprenant ? $apprenant->inscriptions()->with('session.formation')->get() : collect();
 
-        // جميع المدفوعات
-        $paiements = $apprenant ? $apprenant->paiements()->with('formation')->get() : collect();
-
-        return view('apprenant.dashboard', compact('myFormations', 'inscriptions', 'paiements'));
+        return view('apprenant.dashboard', compact('myFormations', 'inscriptions'));
     }
 
     /**

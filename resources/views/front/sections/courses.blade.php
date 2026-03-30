@@ -2,109 +2,66 @@
 <div class="container-xxl py-5" id="courses">
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-            <h6 class="section-title bg-white text-center text-primary px-3">Cours</h6>
-            <h1 class="mb-5">Cours Populaires</h1>
+            <h6 class="section-title bg-white text-center text-primary px-3">Formations</h6>
+            <h1 class="mb-5">Nos Formations Populaires</h1>
         </div>
         <div class="row g-4 justify-content-center">
-            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                <div class="course-item bg-light">
-                    <div class="position-relative overflow-hidden">
-                        <img class="img-fluid" src="{{ asset('img/course-1.jpg') }}" alt="">
-                        <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
-                            <a href="#" class="flex-shrink-0 btn btn-sm btn-primary px-3 border-end"
-                                style="border-radius: 30px 0 0 30px;">En savoir plus</a>
-                            <a href="#" class="flex-shrink-0 btn btn-sm btn-primary px-3"
-                                style="border-radius: 0 30px 30px 0;">S'inscrire</a>
+            @forelse ($formations ?? [] as $formation)
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.{{ $loop->index + 1 }}s">
+                    <div class="course-item bg-light">
+                        <div class="position-relative overflow-hidden">
+                            <img class="img-fluid" src="{{ asset('img/course-' . (($loop->index % 3) + 1) . '.jpg') }}"
+                                alt="{{ $formation->titre }}" style="height: 200px; object-fit: cover;">
+                            <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
+                                <a href="{{ route('course.detail', $formation->id) }}"
+                                    class="flex-shrink-0 btn btn-sm btn-primary px-3 border-end"
+                                    style="border-radius: 30px 0 0 30px;">
+                                    <i class="bi bi-eye"></i> En savoir plus
+                                </a>
+                                <a href="{{ route('apprenant.inscriptions') }}"
+                                    class="flex-shrink-0 btn btn-sm btn-primary px-3"
+                                    style="border-radius: 0 30px 30px 0;">
+                                    <i class="bi bi-bookmark-check"></i> S'inscrire
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="text-center p-4 pb-0">
-                        <h3 class="mb-0">€29.00</h3>
-                        <div class="mb-3">
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small>(123)</small>
+                        <div class="text-center p-4 pb-0">
+                            <h3 class="mb-0" style="color: #06BBCC;">{{ number_format($formation->tarif, 2) }} DH</h3>
+                            <div class="mb-3">
+                                @for ($i = 0; $i < 5; $i++)
+                                    <small class="fa fa-star text-primary"></small>
+                                @endfor
+                                <small>({{ $formation->sessions->sum(fn($s) => $s->inscriptions->count()) }})</small>
+                            </div>
+                            <h5 class="mb-4">{{ $formation->titre }}</h5>
                         </div>
-                        <h5 class="mb-4">Développement Web</h5>
-                    </div>
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><i
-                                class="fa fa-user-tie text-primary me-2"></i>John Doe</small>
-                        <small class="flex-fill text-center border-end py-2"><i
-                                class="fa fa-clock text-primary me-2"></i>1.49 Hrs</small>
-                        <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>30
-                            Students</small>
+                        <div class="d-flex border-top">
+                            <small class="flex-fill text-center border-end py-2">
+                                <i class="fa fa-user-tie text-primary me-2"></i>
+                                @if ($formation->formateurs->first())
+                                    {{ $formation->formateurs->first()->user->name }}
+                                @else
+                                    N/A
+                                @endif
+                            </small>
+                            <small class="flex-fill text-center border-end py-2">
+                                <i class="fa fa-clock text-primary me-2"></i>
+                                {{ $formation->duree }} jours
+                            </small>
+                            <small class="flex-fill text-center py-2">
+                                <i class="fa fa-users text-primary me-2"></i>
+                                {{ $formation->sessions->sum(fn($s) => $s->inscriptions->count()) }} Apprenants
+                            </small>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                <div class="course-item bg-light">
-                    <div class="position-relative overflow-hidden">
-                        <img class="img-fluid" src="{{ asset('img/course-2.jpg') }}" alt="">
-                        <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
-                            <a href="#" class="flex-shrink-0 btn btn-sm btn-primary px-3 border-end"
-                                style="border-radius: 30px 0 0 30px;">En savoir plus</a>
-                            <a href="#" class="flex-shrink-0 btn btn-sm btn-primary px-3"
-                                style="border-radius: 0 30px 30px 0;">S'inscrire</a>
-                        </div>
-                    </div>
-                    <div class="text-center p-4 pb-0">
-                        <h3 class="mb-0">€49.00</h3>
-                        <div class="mb-3">
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small>(456)</small>
-                        </div>
-                        <h5 class="mb-4">Data Science</h5>
-                    </div>
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><i
-                                class="fa fa-user-tie text-primary me-2"></i>Jane Smith</small>
-                        <small class="flex-fill text-center border-end py-2"><i
-                                class="fa fa-clock text-primary me-2"></i>2.30 Hrs</small>
-                        <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>45
-                            Students</small>
+            @empty
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        Aucune formation disponible pour le moment.
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                <div class="course-item bg-light">
-                    <div class="position-relative overflow-hidden">
-                        <img class="img-fluid" src="{{ asset('img/course-3.jpg') }}" alt="">
-                        <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
-                            <a href="#" class="flex-shrink-0 btn btn-sm btn-primary px-3 border-end"
-                                style="border-radius: 30px 0 0 30px;">En savoir plus</a>
-                            <a href="#" class="flex-shrink-0 btn btn-sm btn-primary px-3"
-                                style="border-radius: 0 30px 30px 0;">S'inscrire</a>
-                        </div>
-                    </div>
-                    <div class="text-center p-4 pb-0">
-                        <h3 class="mb-0">€39.00</h3>
-                        <div class="mb-3">
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small class="fa fa-star text-primary"></small>
-                            <small>(234)</small>
-                        </div>
-                        <h5 class="mb-4">Design Graphique</h5>
-                    </div>
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><i
-                                class="fa fa-user-tie text-primary me-2"></i>Bob Johnson</small>
-                        <small class="flex-fill text-center border-end py-2"><i
-                                class="fa fa-clock text-primary me-2"></i>1.80 Hrs</small>
-                        <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>28
-                            Students</small>
-                    </div>
-                </div>
-            </div>
+            @endforelse
         </div>
     </div>
 </div>

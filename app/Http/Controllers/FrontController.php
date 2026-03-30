@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Formation;
+use App\Models\Formateur;
+use App\Models\FormationSession;
 use Illuminate\Http\Request;
 
 class FrontController extends Controller
@@ -11,7 +14,10 @@ class FrontController extends Controller
      */
     public function index()
     {
-        return view('layout.PublicLayout');
+        $formations = Formation::with('formateurs.user', 'sessions')->limit(6)->get();
+        $formateurs = Formateur::with('user')->limit(4)->get();
+
+        return view('front.layouts.main', compact('formations', 'formateurs'));
     }
 
     /**
@@ -19,43 +25,8 @@ class FrontController extends Controller
      */
     public function courses()
     {
-        $courses = [
-            [
-                'id' => 1,
-                'title' => 'Développement Web',
-                'price' => 29.00,
-                'image' => asset('img/course-1.jpg'),
-                'instructor' => 'John Doe',
-                'duration' => '1.49 Hrs',
-                'students' => 30,
-                'rating' => 5,
-                'reviews' => 123,
-            ],
-            [
-                'id' => 2,
-                'title' => 'Data Science',
-                'price' => 49.00,
-                'image' => asset('img/course-2.jpg'),
-                'instructor' => 'Jane Smith',
-                'duration' => '2.30 Hrs',
-                'students' => 45,
-                'rating' => 5,
-                'reviews' => 456,
-            ],
-            [
-                'id' => 3,
-                'title' => 'Design Graphique',
-                'price' => 39.00,
-                'image' => asset('img/course-3.jpg'),
-                'instructor' => 'Bob Johnson',
-                'duration' => '1.80 Hrs',
-                'students' => 28,
-                'rating' => 5,
-                'reviews' => 234,
-            ],
-        ];
-
-        return view('front.pages.courses', compact('courses'));
+        $formations = Formation::with('formateurs.user', 'sessions')->paginate(12);
+        return view('front.pages.courses', compact('formations'));
     }
 
     /**
@@ -96,40 +67,17 @@ class FrontController extends Controller
      */
     public function courseDetail($id)
     {
-        // This would typically fetch from database
-        // For now, returning a sample course
-        $course = [
-            'id' => $id,
-            'title' => 'Développement Web',
-            'price' => 29.00,
-            'image' => asset('img/course-1.jpg'),
-            'instructor' => 'John Doe',
-            'duration' => '1.49 Hrs',
-            'students' => 30,
-            'rating' => 5,
-            'reviews' => 123,
-            'description' => 'Un cours complet sur le développement web moderne.',
-        ];
-
-        return view('front.pages.course-detail', compact('course'));
+        $formation = Formation::with('formateurs.user', 'sessions')->findOrFail($id);
+        return view('front.pages.course-detail', compact('formation'));
     }
 
     /**
-     * Display instructor profile
+     * Display instructor details
      */
     public function instructor($id)
     {
-        // Fetch instructor from database
-        $instructor = [
-            'id' => $id,
-            'name' => 'John Doe',
-            'title' => 'Développeur Full-Stack',
-            'image' => asset('img/team-1.jpg'),
-            'bio' => 'Expert en développement web avec plus de 10 ans d\'expérience.',
-            'courses' => 5,
-            'students' => 150,
-        ];
-
-        return view('front.pages.instructor', compact('instructor'));
+        $formateur = Formateur::with('user')->findOrFail($id);
+        $formations = $formateur->formations()->with('sessions')->get();
+        return view('front.pages.instructor', compact('formateur', 'formations'));
     }
 }

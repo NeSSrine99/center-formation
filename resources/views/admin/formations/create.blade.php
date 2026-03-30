@@ -22,15 +22,20 @@
                     </div>
 
                     <div class="row g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label">Durée (jours)</label>
-                            <input type="number" name="duree_jours" class="form-control" min="1"
-                                value="{{ old('duree_jours') }}">
+                            <input type="number" name="duree" class="form-control" min="1"
+                                value="{{ old('duree') }}">
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Prix</label>
-                            <input type="number" step="0.01" name="prix" class="form-control"
-                                value="{{ old('prix', 0) }}">
+                        <div class="col-md-3">
+                            <label class="form-label">Niveau</label>
+                            <input type="text" name="niveau" class="form-control" value="{{ old('niveau') }}"
+                                placeholder="ex: Débutant, Intermédiaire">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Tarif</label>
+                            <input type="number" step="0.01" name="tarif" class="form-control"
+                                value="{{ old('tarif', 0) }}">
                         </div>
                     </div>
 
@@ -38,22 +43,11 @@
                         <label class="form-label">Formateurs</label>
                         <select name="formateur_ids[]" class="form-control" multiple>
                             @foreach ($formateurs as $formateur)
-                                <option value="{{ $formateur->id }}">{{ $formateur->nom }} ({{ $formateur->email }})
+                                <option value="{{ $formateur->id }}">{{ $formateur->user->name }}
                                 </option>
                             @endforeach
                         </select>
                         <small class="text-muted">Maintenez Ctrl/Cmd pour sélectionner plusieurs.</small>
-                    </div>
-
-                    <div class="mt-3">
-                        <label class="form-label">Sessions</label>
-                        <select name="session_ids[]" class="form-control" multiple>
-                            @foreach ($sessions as $session)
-                                <option value="{{ $session->id }}">{{ $session->nom }}
-                                    ({{ optional($session->debut)->format('Y-m-d') ?? '-' }})
-                                </option>
-                            @endforeach
-                        </select>
                     </div>
 
                     <button type="submit" class="btn btn-success mt-3">Créer</button>

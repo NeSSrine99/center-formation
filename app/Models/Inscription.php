@@ -9,7 +9,12 @@ class Inscription extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['apprenant_id', 'session_id', 'statut', 'date_inscription'];
+    protected $fillable = [
+        'apprenant_id',
+        'session_id',
+        'statut',
+        'date_inscription'
+    ];
 
     public function apprenant()
     {
@@ -18,6 +23,6 @@ class Inscription extends Model
 
     public function session()
     {
-        return $this->belongsTo(Session::class);
+        return $this->belongsTo(FormationSession::class, 'session_id');
     }
 }

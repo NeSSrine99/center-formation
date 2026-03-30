@@ -30,7 +30,7 @@
                     <div class="col-md-4 mb-4">
                         <div class="card formation-card h-100 shadow-sm">
                             <div class="card-body">
-                                <h5>{{ $formation->title }}</h5>
+                                <h5>{{ $formation->titre }}</h5>
                                 <p class="text-muted">{{ Str::limit($formation->description, 80) }}</p>
 
                                 <!-- Progress -->
@@ -58,7 +58,7 @@
                     <div class="col-md-4 mb-4">
                         <div class="card formation-card h-100 shadow-sm">
                             <div class="card-body">
-                                <h5>{{ $formation->title }}</h5>
+                                <h5>{{ $formation->titre }}</h5>
                                 <p>{{ Str::limit($formation->description, 80) }}</p>
 
                                 <form method="POST" action="{{ route('apprenant.inscrire') }}">
@@ -80,9 +80,10 @@
             <div class="list-group">
                 @foreach ($sessions as $session)
                     <a href="#" class="list-group-item list-group-item-action">
-                        <strong>{{ $session->formation->title }}</strong><br>
+                        <strong>{{ $session->formation->titre }}</strong><br>
                         <small>
-                            {{ $session->start_date }} → {{ $session->end_date }}
+                            {{ \Carbon\Carbon::parse($session->date_debut)->format('d/m/Y') }} →
+                            {{ \Carbon\Carbon::parse($session->date_fin)->format('d/m/Y') }}
                         </small>
                     </a>
                 @endforeach

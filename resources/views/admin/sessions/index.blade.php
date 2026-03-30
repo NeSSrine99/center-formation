@@ -16,12 +16,13 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Nom</th>
+                                <th>Formation</th>
                                 <th>Début</th>
                                 <th>Fin</th>
+                                <th>Lieu</th>
                                 <th>Capacité</th>
-                                <th>État</th>
-                                <th>Formations</th>
+                                <th>Statut</th>
+                                <th>Inscriptions</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -29,12 +30,18 @@
                             @foreach ($sessions as $session)
                                 <tr>
                                     <td>{{ $session->id }}</td>
-                                    <td>{{ $session->nom ?? '—' }}</td>
-                                    <td>{{ optional($session->debut)->format('Y-m-d') ?? '—' }}</td>
-                                    <td>{{ optional($session->fin)->format('Y-m-d') ?? '—' }}</td>
+                                    <td>{{ $session->formation->titre ?? '—' }}</td>
+                                    <td>{{ optional($session->date_debut)->format('Y-m-d') ?? '—' }}</td>
+                                    <td>{{ optional($session->date_fin)->format('Y-m-d') ?? '—' }}</td>
+                                    <td>{{ $session->lieu ?? '—' }}</td>
                                     <td>{{ $session->capacite }}</td>
-                                    <td>{{ ucfirst($session->etat) }}</td>
-                                    <td>{{ $session->formations->pluck('titre')->join(', ') }}</td>
+                                    <td>
+                                        <span
+                                            class="badge {{ $session->statut === 'ouverte' ? 'bg-success' : 'bg-danger' }}">
+                                            {{ ucfirst($session->statut) }}
+                                        </span>
+                                    </td>
+                                    <td>{{ $session->inscriptions->count() }}</td>
                                     <td class="text-nowrap">
                                         <a href="{{ route('admin.edit-session', $session->id) }}"
                                             class="btn btn-sm btn-primary">Éditer</a>

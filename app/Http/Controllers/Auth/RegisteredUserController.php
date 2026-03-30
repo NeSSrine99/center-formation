@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Role;
 use App\Models\Apprenant;
 use App\Models\Formateur;
 use Illuminate\Auth\Events\Registered;
@@ -33,27 +34,30 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'in:formateur,apprenant,administrateur'],
         ]);
+
+        // Get the role by name
+        $role = Role::where('name', $request->role)->firstOrFail();
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
+            'role_id' => $role->id,
         ]);
 
-        if ($user->role === 'apprenant') {
+        if ($user->role->name === 'apprenant') {
             Apprenant::firstOrCreate(
                 ['user_id' => $user->id],
-                ['nom' => $user->name, 'email' => $user->email]
+                ['telephone' => null, 'niveau' => 'Débutant', 'statut' => 'actif']
             );
-        } elseif ($user->role === 'formateur') {
+        } elseif ($user->role->name === 'formateur') {
             Formateur::firstOrCreate(
                 ['user_id' => $user->id],
-                ['nom' => $user->name, 'email' => $user->email]
+                ['experience' => null, 'specialite' => null, 'bio' => null]
             );
         }
 

@@ -9,7 +9,13 @@ class Formation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['titre', 'description', 'duree_jours', 'prix'];
+    protected $fillable = [
+        'titre',
+        'description',
+        'duree',
+        'niveau',
+        'tarif'
+    ];
 
     public function formateurs()
     {
@@ -18,8 +24,6 @@ class Formation extends Model
 
     public function sessions()
     {
-        return $this->belongsToMany(Session::class, 'session_formation')
-            ->withPivot(['debut', 'fin'])
-            ->withTimestamps();
+        return $this->hasMany(FormationSession::class, 'formation_id');
     }
 }

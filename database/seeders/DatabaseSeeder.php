@@ -11,7 +11,6 @@ use App\Models\FormationSession;
 use App\Models\Apprenant;
 use App\Models\Formateur;
 use App\Models\Inscription;
-use App\Models\Paiement;
 use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
@@ -19,78 +18,104 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // --------------------
-        // 1️⃣ Roles
+        // 1️⃣ Create Roles
         // --------------------
-        $roles = ['administrateur', 'formateur', 'apprenant'];
-        foreach ($roles as $roleName) {
-            Role::firstOrCreate(['name' => $roleName]);
-        }
+        $adminRole = Role::firstOrCreate(
+            ['name' => 'administrateur'],
+            ['description' => 'Administrator with full access']
+        );
+
+        $formateurRole = Role::firstOrCreate(
+            ['name' => 'formateur'],
+            ['description' => 'Trainer who teaches formations']
+        );
+
+        $apprenantRole = Role::firstOrCreate(
+            ['name' => 'apprenant'],
+            ['description' => 'Student who takes formations']
+        );
 
         // --------------------
-        // 2️⃣ Admin
+        // 2️⃣ Create Admin User
         // --------------------
         $admin = User::firstOrCreate(
-            ['email' => 'admin@test.com'],
+            ['email' => 'admin@example.com'],
             [
-                'name' => 'Admin',
-                'password' => Hash::make('admin123'),
-                'role' => 'administrateur'
+                'name' => 'Admin User',
+                'password' => Hash::make('password123'),
+                'role_id' => $adminRole->id,
+                'email_verified_at' => now(),
             ]
         );
 
         // --------------------
-        // 3️⃣ Formateurs
+        // 3️⃣ Create Formateur Users & Profiles
         // --------------------
-        $formateurs = [];
         $formateurUsers = [
-            ['name' => 'John Formateur', 'email' => 'john@formateur.com'],
-            ['name' => 'Emma Formatrice', 'email' => 'emma@formateur.com'],
+            [
+                'user_data' => ['name' => 'John Dupont', 'email' => 'john.dupont@example.com'],
+                'formateur_data' => ['experience' => '10 ans', 'specialite' => 'Web Development', 'bio' => 'Expert en développement web']
+            ],
+            [
+                'user_data' => ['name' => 'Emma Martin', 'email' => 'emma.martin@example.com'],
+                'formateur_data' => ['experience' => '8 ans', 'specialite' => 'Data Science', 'bio' => 'Spécialiste en data science et machine learning']
+            ],
+            [
+                'user_data' => ['name' => 'Pierre Bernard', 'email' => 'pierre.bernard@example.com'],
+                'formateur_data' => ['experience' => '12 ans', 'specialite' => 'UI/UX Design', 'bio' => 'Designer avec expérience internationale']
+            ],
         ];
 
-        foreach ($formateurUsers as $fUser) {
+        $formateurs = [];
+        foreach ($formateurUsers as $fData) {
             $user = User::firstOrCreate(
-                ['email' => $fUser['email']],
-                ['name' => $fUser['name'], 'password' => Hash::make('password'), 'role' => 'formateur']
+                ['email' => $fData['user_data']['email']],
+                [
+                    'name' => $fData['user_data']['name'],
+                    'password' => Hash::make('password123'),
+                    'role_id' => $formateurRole->id,
+                    'email_verified_at' => now(),
+                ]
             );
 
             $formateur = Formateur::firstOrCreate(
                 ['user_id' => $user->id],
-                [
-                    'nom' => explode(' ', $user->name)[0],
-                    'prenom' => 'Test',
-                    'email' => $user->email,
-                    'phone' => '5000' . rand(10, 99)
-                ]
+                $fData['formateur_data']
             );
 
-            $formateurs[] = $user;
+            $formateurs[] = $formateur;
         }
 
         // --------------------
-        // 4️⃣ Apprenants
+        // 4️⃣ Create Apprenant Users & Profiles
         // --------------------
         $apprenants = [];
         $apprenantUsers = [
-            ['name' => 'Salwa', 'email' => 'salwa@test.com'],
-            ['name' => 'Ali', 'email' => 'ali@test.com'],
-            ['name' => 'Sara', 'email' => 'sara@test.com'],
-            ['name' => 'Mohamed', 'email' => 'mohamed@test.com'],
-            ['name' => 'Lina', 'email' => 'lina@test.com'],
+            ['name' => 'Salwa Ahmed', 'email' => 'salwa.ahmed@example.com'],
+            ['name' => 'Ali Mansour', 'email' => 'ali.mansour@example.com'],
+            ['name' => 'Sara Khalil', 'email' => 'sara.khalil@example.com'],
+            ['name' => 'Mohamed Hassan', 'email' => 'mohamed.hassan@example.com'],
+            ['name' => 'Lina Boudraa', 'email' => 'lina.boudraa@example.com'],
+            ['name' => 'Fatima Zahra', 'email' => 'fatima.zahra@example.com'],
         ];
 
-        foreach ($apprenantUsers as $aUser) {
+        foreach ($apprenantUsers as $aData) {
             $user = User::firstOrCreate(
-                ['email' => $aUser['email']],
-                ['name' => $aUser['name'], 'password' => Hash::make('password'), 'role' => 'apprenant']
+                ['email' => $aData['email']],
+                [
+                    'name' => $aData['name'],
+                    'password' => Hash::make('password123'),
+                    'role_id' => $apprenantRole->id,
+                    'email_verified_at' => now(),
+                ]
             );
 
             $apprenant = Apprenant::firstOrCreate(
                 ['user_id' => $user->id],
                 [
-                    'nom' => explode(' ', $user->name)[0],
-                    'prenom' => 'Test',
-                    'email' => $user->email,
-                    'phone' => '6000' . rand(10, 99)
+                    'niveau' => ['Débutant', 'Intermédiaire', 'Avancé'][rand(0, 2)],
+                    'telephone' => '06' . str_pad(rand(0, 99999999), 8, '0', STR_PAD_LEFT),
+                    'statut' => 'actif'
                 ]
             );
 
@@ -98,72 +123,117 @@ class DatabaseSeeder extends Seeder
         }
 
         // --------------------
-        // 5️⃣ Formations & Sessions
+        // 5️⃣ Create Formations
+        // --------------------
+        $formations = [
+            [
+                'titre' => 'Développement Web Avancé',
+                'description' => 'Apprenez les dernières technologies du développement web',
+                'duree' => 30,
+                'niveau' => 'Avancé',
+                'tarif' => 450.00
+            ],
+            [
+                'titre' => 'Introduction à la Data Science',
+                'description' => 'Comprendre les bases de la science des données et du machine learning',
+                'duree' => 40,
+                'niveau' => 'Débutant',
+                'tarif' => 550.00
+            ],
+            [
+                'titre' => 'Design UI/UX Moderne',
+                'description' => 'Créez des interfaces utilisateur magnifiques et intuitives',
+                'duree' => 25,
+                'niveau' => 'Intermédiaire',
+                'tarif' => 350.00
+            ],
+            [
+                'titre' => 'Python pour Débutants',
+                'description' => 'Maîtrisez les fondamentaux de Python',
+                'duree' => 20,
+                'niveau' => 'Débutant',
+                'tarif' => 300.00
+            ],
+            [
+                'titre' => 'React.js Avancé',
+                'description' => 'Devenez expert en React et les patterns modernes',
+                'duree' => 35,
+                'niveau' => 'Avancé',
+                'tarif' => 500.00
+            ],
+        ];
+
+        $createdFormations = [];
+        foreach ($formations as $fData) {
+            $formation = Formation::firstOrCreate(
+                ['titre' => $fData['titre']],
+                $fData
+            );
+            $createdFormations[] = $formation;
+        }
+
+        // --------------------
+        // 6️⃣ Link Formateurs to Formations
+        // --------------------
+        foreach ($createdFormations as $index => $formation) {
+            $formateur = $formateurs[$index % count($formateurs)];
+            $formation->formateurs()->syncWithoutDetaching([$formateur->id]);
+        }
+
+        // --------------------
+        // 7️⃣ Create Formation Sessions
         // --------------------
         $sessions = [];
+        foreach ($createdFormations as $formation) {
+            for ($i = 1; $i <= 2; $i++) {
+                $startDate = Carbon::now()->addDays(rand(5, 30));
+                $endDate = $startDate->copy()->addDays(rand(10, 20));
 
-        foreach ($formateurs as $formateurUser) {
-            for ($i = 1; $i <= 3; $i++) {
-                $formation = Formation::firstOrCreate(
-                    ['titre' => "Formation $i de {$formateurUser->name}"],
+                $session = FormationSession::firstOrCreate(
                     [
-                        'description' => "Description de la formation $i de {$formateurUser->name}",
-                        'price' => rand(100, 300),
-                        'duration' => rand(10, 40)
+                        'formation_id' => $formation->id,
+                        'date_debut' => $startDate->format('Y-m-d'),
+                        'date_fin' => $endDate->format('Y-m-d'),
+                    ],
+                    [
+                        'lieu' => ['Salle 101', 'Salle 202', 'En ligne', 'Amphi A'][rand(0, 3)],
+                        'capacite' => rand(20, 50),
+                        'statut' => ['ouverte', 'fermee'][rand(0, 1)]
                     ]
                 );
 
-                // Attribuer la formation au formateur
-                $formateurModel = Formateur::where('user_id', $formateurUser->id)->first();
-                $formateurModel->formations()->syncWithoutDetaching([$formation->id]);
-
-                // 2 Sessions par formation
-                for ($j = 1; $j <= 2; $j++) {
-                    $session = FormationSession::firstOrCreate(
-                        [
-                            'formation_id' => $formation->id,
-                            'start_date' => Carbon::now()->addDays(rand(1, 30))
-                        ],
-                        [
-                            'end_date' => Carbon::now()->addDays(rand(31, 60)),
-                            'etat' => 'ouverte'
-                        ]
-                    );
-                    $sessions[] = $session;
-                }
+                $sessions[] = $session;
             }
         }
 
         // --------------------
-        // 6️⃣ Inscriptions & Paiements
+        // 8️⃣ Create Inscriptions
         // --------------------
         foreach ($apprenants as $apprenant) {
-            $randomSessions = collect($sessions)->random(2);
-            foreach ($randomSessions as $session) {
-                $inscription = Inscription::firstOrCreate(
-                    [
-                        'apprenant_id' => $apprenant->id,
-                        'session_id' => $session->id
-                    ],
-                    [
-                        'statut' => 'valide',
-                        'date_inscription' => Carbon::now()->subDays(rand(1, 10))
-                    ]
-                );
+            $randomSessions = collect($sessions)->random(min(3, count($sessions)));
 
-                Paiement::firstOrCreate(
+            foreach ($randomSessions as $session) {
+                Inscription::firstOrCreate(
                     [
                         'apprenant_id' => $apprenant->id,
-                        'formation_id' => $session->formation->id
+                        'session_id' => $session->id,
                     ],
                     [
-                        'amount' => $session->formation->price,
-                        'status' => rand(0, 1) ? 'paid' : 'pending'
+                        'statut' => ['en_attente', 'valide', 'annule'][rand(0, 2)],
+                        'date_inscription' => Carbon::now()->subDays(rand(1, 15)),
                     ]
                 );
             }
         }
 
-        $this->command->info('✅ Database seeded successfully with admin, formateurs, apprenants, formations, sessions, inscriptions, and paiements.');
+        $this->command->info('✅ Database seeded successfully!');
+        $this->command->info('📊 Created:');
+        $this->command->info('  - 3 Roles (Admin, Formateur, Apprenant)');
+        $this->command->info('  - 1 Admin user');
+        $this->command->info('  - ' . count($formateurs) . ' Formateurs');
+        $this->command->info('  - ' . count($apprenants) . ' Apprenants');
+        $this->command->info('  - ' . count($createdFormations) . ' Formations');
+        $this->command->info('  - ' . count($sessions) . ' Sessions de formation');
+        $this->command->info('  - ' . Inscription::count() . ' Inscriptions');
     }
 }

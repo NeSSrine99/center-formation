@@ -18,7 +18,8 @@
                                 <th>#</th>
                                 <th>Titre</th>
                                 <th>Durée (jours)</th>
-                                <th>Prix</th>
+                                <th>Niveau</th>
+                                <th>Tarif</th>
                                 <th>Formateurs</th>
                                 <th>Sessions</th>
                                 <th>Actions</th>
@@ -29,10 +30,17 @@
                                 <tr>
                                     <td>{{ $formation->id }}</td>
                                     <td>{{ $formation->titre }}</td>
-                                    <td>{{ $formation->duree_jours ?? '-' }}</td>
-                                    <td>{{ number_format($formation->prix, 2, ',', ' ') }} DH</td>
-                                    <td>{{ $formation->formateurs->pluck('nom')->join(', ') }}</td>
-                                    <td>{{ $formation->sessions->pluck('nom')->join(', ') }}</td>
+                                    <td>{{ $formation->duree ?? '-' }}</td>
+                                    <td>{{ $formation->niveau ?? '-' }}</td>
+                                    <td>{{ number_format($formation->tarif, 2, ',', ' ') }} DH</td>
+                                    <td>
+                                        @forelse($formation->formateurs as $formateur)
+                                            <span class="badge bg-secondary">{{ $formateur->user->name }}</span>
+                                        @empty
+                                            -
+                                        @endforelse
+                                    </td>
+                                    <td>{{ $formation->sessions->count() }} session(s)</td>
                                     <td class="text-nowrap">
                                         <a href="{{ route('admin.edit-formation', $formation->id) }}"
                                             class="btn btn-sm btn-primary">Éditer</a>
