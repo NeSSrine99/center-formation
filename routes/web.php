@@ -78,6 +78,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/apprenant/materials', [ApprenantController::class, 'materials'])->middleware('role:apprenant')->name('apprenant.materials');
     Route::get('/apprenant/inscriptions', [ApprenantController::class, 'inscriptions'])->middleware('role:apprenant')->name('apprenant.inscriptions');
     Route::post('/apprenant/inscrire', [ApprenantController::class, 'inscrire'])->middleware('role:apprenant')->name('apprenant.inscrire');
+    Route::delete('/apprenant/inscription/{id}', [ApprenantController::class, 'cancel'])->middleware('role:apprenant')->name('apprenant.cancel');
 });
 
 Route::middleware('auth')->group(function () {
