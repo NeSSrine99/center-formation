@@ -47,6 +47,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/admin/settings', [AdminController::class, 'settings'])->middleware('role:administrateur')->name('admin.settings');
 
     // Admin trainings and sessions
+
+    Route::get('/formateur/courses/{id}', [FormateurController::class, 'show'])
+        ->middleware('role:formateur')
+        ->name('formateur.courses.show');
+
+
     Route::get('/admin/formations', [AdminController::class, 'formations'])->middleware('role:administrateur')->name('admin.formations');
     Route::get('/admin/formations/create', [AdminController::class, 'createFormation'])->middleware('role:administrateur')->name('admin.create-formation');
     Route::post('/admin/formations', [AdminController::class, 'storeFormation'])->middleware('role:administrateur')->name('admin.store-formation');

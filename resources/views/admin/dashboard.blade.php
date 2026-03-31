@@ -5,20 +5,17 @@
         <!-- Statistics Cards -->
         <div class="row g-4 mb-5">
             <div class="col-lg-3 col-md-6">
-                <div class="card stat-card border-0 shadow-sm" style="border-left: 4px solid #06BBCC;">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h6 class="text-muted mb-2">Total Utilisateurs</h6>
-                                <h2 class="mb-0" style="color: #06BBCC;">
-                                    <strong>{{ \App\Models\User::count() }}</strong>
-                                </h2>
-                            </div>
-                            <div style="font-size: 2.5rem; color: #06BBCC; opacity: 0.2;">
-                                <i class="bi bi-people-fill"></i>
-                            </div>
+                <div class="card p-3 text-white"
+                    style="background: linear-gradient(135deg, #06BBCC, #4facfe); border-radius:16px;">
+
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <small>Total Utilisateurs</small>
+                            <h3 class="fw-bold">{{ \App\Models\User::count() }}</h3>
                         </div>
+                        <i class="bi bi-people-fill fs-1 opacity-50"></i>
                     </div>
+
                 </div>
             </div>
 

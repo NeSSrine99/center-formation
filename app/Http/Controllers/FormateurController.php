@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Formation;
+use App\Models\FormationSession;
+use App\Models\Inscription;
+use App\Models\CourseMaterial;
 use Illuminate\Http\Request;
 
 class FormateurController extends Controller
@@ -19,8 +23,12 @@ class FormateurController extends Controller
      */
     public function courses()
     {
-        // TODO: Add courses management logic
-        return view('formateur.courses');
+        // Fetch all courses created by this formateur
+        $courses = Formation::where('formateur_id', auth()->id())
+            ->latest()
+            ->get();
+
+        return view('formateur.courses', compact('courses'));
     }
 
     /**
@@ -28,8 +36,16 @@ class FormateurController extends Controller
      */
     public function students()
     {
-        // TODO: Add students management logic
-        return view('formateur.students');
+
+        $students = Inscription::with(['apprenant', 'session.formation'])
+            ->whereHas('session.formation', function ($q) {
+                $q->where('formateur_id', auth()->id());
+            })
+            ->latest()
+            ->get();
+
+
+        return view('formateur.students', compact('students'));
     }
 
     /**
@@ -37,7 +53,20 @@ class FormateurController extends Controller
      */
     public function materials()
     {
-        // TODO: Add materials management logic
-        return view('formateur.materials');
+        // Fetch materials of courses created by this formateur
+        $materials = CourseMaterial::whereHas('formation', fn($q) => $q->where('formateur_id', auth()->id()))
+            ->latest()
+            ->get();
+
+        return view('formateur.materials', compact('materials'));
+    }
+
+    public function show($id)
+    {
+        $course = Formation::where('id', $id)
+            ->where('formateur_id', auth()->id()) // Only allow viewing your own courses
+            ->firstOrFail();
+
+        return view('formateur.course-show', compact('course'));
     }
 }
