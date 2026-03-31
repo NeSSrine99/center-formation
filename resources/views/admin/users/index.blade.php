@@ -222,6 +222,20 @@
             color: #fff;
         }
 
+        .avatar-small {
+            width: 42px;
+            height: 42px;
+            font-size: 0.95rem;
+        }
+
+        .avatar-color-0 { background: #4F6EF7; }
+        .avatar-color-1 { background: #f59e0b; }
+        .avatar-color-2 { background: #10b981; }
+        .avatar-color-3 { background: #ef4444; }
+        .avatar-color-4 { background: #8b5cf6; }
+        .avatar-color-5 { background: #06b6d4; }
+        .avatar-color-6 { background: #ec4899; }
+
         .user-name {
             font-weight: 600;
             color: #1a1d23;
@@ -397,6 +411,63 @@
             border-color: #4F6EF7;
         }
 
+        .filter-panel {
+            margin-bottom: 20px;
+            padding: 18px 20px;
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            display: none;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .filter-panel.show {
+            display: flex;
+        }
+
+        .filter-form {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .filter-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 180px;
+            flex: 1;
+        }
+
+        .filter-field label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .filter-field input,
+        .filter-field select {
+            width: 100%;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: #1a1d23;
+            background: #fff;
+            outline: none;
+        }
+
+        .filter-field input:focus,
+        .filter-field select:focus {
+            border-color: #4F6EF7;
+            box-shadow: 0 0 0 3px rgba(79, 110, 247, .12);
+        }
+
         /* ══════════════════════════════
        MOBILE CARD LIST  (≤ 700px)
        Hide table, show cards instead
@@ -560,20 +631,20 @@
         <div class="page-header">
             <div>
                 <div class="page-title">Utilisateurs</div>
-                <div class="page-meta">{{ $users->count() }} utilisateurs trouvés</div>
+                <div class="page-meta">{{ $users->total() }} utilisateurs trouvés</div>
             </div>
 
             <div class="toolbar">
                 <div class="show-select">
                     <span>Showing</span>
-                    <select onchange="window.location.href='?per_page='+this.value">
+                    <select onchange="updatePerPage(this.value)">
                         <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
                         <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
                         <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
                     </select>
                 </div>
 
-                <button class="btn-toolbar">
+                <button type="button" class="btn-toolbar" id="filterToggle">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 4h18M7 12h10M11 20h2" />
                     </svg>
@@ -597,6 +668,43 @@
             </div>
         </div>
 
+        <div class="filter-panel {{ request()->hasAny(['search', 'role']) ? 'show' : '' }}">
+            <form method="GET" action="{{ route('admin.users') }}" class="filter-form">
+                <div class="filter-field">
+                    <label for="search">Rechercher</label>
+                    <input type="search" name="search" id="search" value="{{ request('search') }}"
+                        placeholder="Nom ou email" />
+                </div>
+
+                <div class="filter-field">
+                    <label for="role">Rôle</label>
+                    <select name="role" id="role">
+                        <option value="">Tous les rôles</option>
+                        @foreach ($roles as $role)
+                            <option value="{{ $role->name }}"
+                                {{ request('role') === $role->name ? 'selected' : '' }}>{{ ucfirst($role->name) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label for="per_page">Afficher</label>
+                    <select name="per_page" id="per_page" onchange="this.form.submit()">
+                        <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                        <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
+                        <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-toolbar btn-primary-action">
+                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span class="btn-label">Filtrer</span>
+                </button>
+            </form>
+        </div>
+
         {{-- Table Card --}}
         <div class="table-card">
 
@@ -617,7 +725,7 @@
                         @forelse($users as $user)
                             @php
                                 $colors = ['#4F6EF7', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899'];
-                                $color = $colors[$user->id % count($colors)];
+                                $colorIndex = $user->id % count($colors);
                                 $initials = strtoupper(substr($user->name, 0, 1));
                                 $roleName = $user->role->name ?? 'apprenant';
                                 $badgeClass = match ($roleName) {
@@ -630,7 +738,7 @@
                                 <td><span class="id-badge">#{{ str_pad($user->id, 5, '0', STR_PAD_LEFT) }}</span></td>
                                 <td>
                                     <div class="user-cell">
-                                        <div class="avatar" style="background:{{ $color }}">{{ $initials }}
+                                        <div class="avatar avatar-color-{{ $colorIndex }}">{{ $initials }}
                                         </div>
                                         <div class="user-name">{{ $user->name }}</div>
                                     </div>
@@ -690,7 +798,7 @@
                 @forelse($users as $user)
                     @php
                         $colors = ['#4F6EF7', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899'];
-                        $color = $colors[$user->id % count($colors)];
+                        $colorIndex = $user->id % count($colors);
                         $initials = strtoupper(substr($user->name, 0, 1));
                         $roleName = $user->role->name ?? 'apprenant';
                         $badgeClass = match ($roleName) {
@@ -702,8 +810,7 @@
                     <div class="user-card">
                         <div class="user-card-top">
                             <div class="user-card-left">
-                                <div class="avatar"
-                                    style="background:{{ $color }}; width:42px; height:42px; font-size:0.95rem; flex-shrink:0;">
+                                <div class="avatar avatar-small avatar-color-{{ $colorIndex }}">
                                     {{ $initials }}</div>
                                 <div style="min-width:0;">
                                     <div class="user-card-name">{{ $user->name }}</div>
@@ -775,4 +882,23 @@
             @endif
         </div>{{-- /.table-card --}}
     </div>{{-- /.index-wrapper --}}
+
+    <script>
+        function updatePerPage(value) {
+            const params = new URLSearchParams(window.location.search);
+            params.set('per_page', value);
+            window.location.search = params.toString();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterToggle = document.getElementById('filterToggle');
+            const filterPanel = document.querySelector('.filter-panel');
+
+            if (filterToggle && filterPanel) {
+                filterToggle.addEventListener('click', function () {
+                    filterPanel.classList.toggle('show');
+                });
+            }
+        });
+    </script>
 </x-admin-layout>

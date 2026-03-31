@@ -201,10 +201,24 @@
         }
 
         .role-pill label .dot {
+            display: inline-block;
             width: 8px;
             height: 8px;
             border-radius: 50%;
             flex-shrink: 0;
+            background: #6b7280;
+        }
+
+        .dot-administrateur {
+            background: #dc2626;
+        }
+
+        .dot-formateur {
+            background: #2563eb;
+        }
+
+        .dot-apprenant {
+            background: #16a34a;
         }
 
         .role-pill input:checked+label {
@@ -449,19 +463,11 @@
                     <label class="form-label">Sélectionner un rôle</label>
                     <div class="role-pills">
                         @foreach ($roles as $role)
-                            @php
-                                $dotColors = [
-                                    'administrateur' => '#dc2626',
-                                    'formateur' => '#2563eb',
-                                    'apprenant' => '#16a34a',
-                                ];
-                                $dc = $dotColors[$role->name] ?? '#6b7280';
-                            @endphp
                             <div class="role-pill">
                                 <input type="radio" name="role_id" id="role_{{ $role->id }}"
                                     value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'checked' : '' }}>
                                 <label for="role_{{ $role->id }}">
-                                    <span class="dot" style="background:{{ $dc }}"></span>
+                                    <span class="dot dot-{{ $role->name }}"></span>
                                     {{ ucfirst($role->name) }}
                                 </label>
                             </div>

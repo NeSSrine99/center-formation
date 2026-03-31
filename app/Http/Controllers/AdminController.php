@@ -31,10 +31,32 @@ class AdminController extends Controller
     /**
      * Show the form for managing users.
      */
-    public function users()
+    public function users(Request $request)
     {
-        $users = User::all();
-        return view('admin.users.index', compact('users'));
+        $query = User::with('role');
+
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($role = $request->input('role')) {
+            $query->whereHas('role', function ($q) use ($role) {
+                $q->where('name', $role);
+            });
+        }
+
+        $perPage = (int) $request->input('per_page', 10);
+        if (!in_array($perPage, [10, 25, 50], true)) {
+            $perPage = 10;
+        }
+
+        $users = $query->paginate($perPage)->withQueryString();
+        $roles = Role::all();
+
+        return view('admin.users.index', compact('users', 'roles'));
     }
 
     /**
@@ -43,7 +65,7 @@ class AdminController extends Controller
     public function createUser()
     {
         $roles = Role::all();
-        return view('admin.create-user', compact('roles'));
+        return view('admin.users.create-user', compact('roles'));
     }
 
     /**
@@ -72,7 +94,7 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($id);
         $roles = Role::all();
-        return view('admin.edit-user', compact('user', 'roles'));
+        return view('admin.users.edit-user', compact('user', 'roles'));
     }
 
     /**
