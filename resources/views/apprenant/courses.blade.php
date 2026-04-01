@@ -1,5 +1,5 @@
 <x-admin-layout>
-    @section('header', 'Mes Formations')
+    @section('header', 'Mes Cours')
 
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -46,13 +46,13 @@
             margin-top: 3px;
         }
 
-        .formation-grid {
+        .courses-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
         }
 
-        .formation-card {
+        .course-card {
             background: #fff;
             border-radius: 16px;
             border: 1.5px solid #f0f1f5;
@@ -63,7 +63,7 @@
             flex-direction: column;
         }
 
-        .formation-card::before {
+        .course-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -75,13 +75,13 @@
             transition: opacity 0.2s;
         }
 
-        .formation-card:hover {
+        .course-card:hover {
             border-color: #d4d8ff;
             box-shadow: 0 12px 32px rgba(79, 110, 247, 0.12);
             transform: translateY(-4px);
         }
 
-        .formation-card:hover::before {
+        .course-card:hover::before {
             opacity: 1;
         }
 
@@ -141,6 +141,17 @@
             flex-direction: column;
         }
 
+        .card-description {
+            font-size: 0.85rem;
+            color: #9499a8;
+            line-height: 1.4;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
         .card-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -166,40 +177,36 @@
             margin-top: 4px;
         }
 
-        .sessions-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .progress-section {
+            margin-top: 12px;
         }
 
-        .session-item {
-            padding: 10px;
-            background: #f9fafb;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            border: 1px solid #f0f1f5;
-            font-size: 0.85rem;
-            transition: background 0.15s;
-        }
-
-        .session-item:hover {
-            background: #f3f4f8;
-        }
-
-        .session-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .session-label {
-            font-weight: 600;
-            color: #1a1d23;
-            display: block;
-            margin-bottom: 3px;
-        }
-
-        .session-date {
-            color: #9499a8;
+        .progress-label {
             font-size: 0.75rem;
+            color: #9499a8;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #f0f1f5;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4F6EF7, #06b6d4);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.7rem;
+            color: #4F6EF7;
+            font-weight: 600;
+            margin-top: 4px;
         }
 
         .card-actions {
@@ -236,16 +243,6 @@
             color: #fff;
         }
 
-        .btn-enroll {
-            background: linear-gradient(135deg, #4F6EF7, #06b6d4);
-            color: #fff;
-        }
-
-        .btn-enroll:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(79, 110, 247, 0.3);
-        }
-
         .empty-state {
             text-align: center;
             padding: 80px 20px;
@@ -269,13 +266,13 @@
         }
 
         @media (max-width: 1100px) {
-            .formation-grid {
+            .courses-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 768px) {
-            .formation-grid {
+            .courses-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -293,107 +290,86 @@
         }
     </style>
 
+    @php
+        $colors = ['#4F6EF7', '#f59e0b', '#10b981', '#ef4444', '#8b5cf6'];
+    @endphp
+
     <div class="page-wrapper">
         <div class="page-header">
             <div>
-                <div class="page-title">Mes Formations</div>
-                <div class="page-meta">Vous avez {{ $myFormations->count() }}
-                    formation{{ $myFormations->count() !== 1 ? 's' : '' }}
-                    inscrite{{ $myFormations->count() !== 1 ? 's' : '' }}</div>
+                <div class="page-title">Mes Cours</div>
+                <div class="page-meta">Suivez vos cours et améliorez vos compétences</div>
             </div>
         </div>
 
-        @if ($myFormations->isEmpty())
-            <div class="empty-state">
-                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-                <p>Vous n'êtes inscrit à aucune formation pour le moment</p>
-                <p style="font-size: 0.85rem; margin-top: 8px;"><a href="{{ route('apprenant.inscriptions') }}"
-                        style="color: #4F6EF7; text-decoration: none; font-weight: 600;">Consulter les formations
-                        disponibles →</a></p>
-            </div>
-        @else
-            <div class="formation-grid">
-                @foreach ($myFormations as $idx => $formation)
-                    <div class="formation-card">
-                        <div class="card-header">
+        @if (isset($courses) && $courses->count() > 0)
+            <div class="courses-grid">
+                @foreach ($courses as $idx => $course)
+                    @php
+                        $bgColor = $colors[$idx % count($colors)];
+                        $progress = rand(0, 100); // Replace with actual progress data
+                    @endphp
+                    <div class="course-card">
+                        <div class="card-header" style="background: linear-gradient(135deg, {{ $bgColor }} 0%, {{ color_adjust($bgColor, -20) }} 100%);">
                             <div class="card-header-inner">
-                                <div class="card-title">{{ $formation->titre }}</div>
-                                <div class="card-subtitle">Formation {{ $idx + 1 }}</div>
+                                <div class="card-title">{{ $course->titre ?? 'Formation' }}</div>
+                                <div class="card-subtitle">Cours</div>
                                 <div class="card-badge">
-                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                                        style="width: 12px;">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M8 7V3m8 4V3M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width: 12px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                                     </svg>
-                                    {{ $formation->sessions->count() }} sessions
+                                    Contenu disponible
                                 </div>
                             </div>
                         </div>
 
                         <div class="card-body">
+                            <p class="card-description">{{ Str::limit($course->description ?? 'Cours complet avec tous les matériaux', 80) }}</p>
+
                             <div class="card-details">
                                 <div class="detail-item">
-                                    <div class="detail-label">NIVEAU</div>
-                                    <div class="detail-value">{{ $formation->niveau ?? 'Standard' }}</div>
+                                    <div class="detail-label">FORMATEUR</div>
+                                    <div class="detail-value">
+                                        @if ($course->formateurs && $course->formateurs->first())
+                                            {{ $course->formateurs->first()->user->name }}
+                                        @else
+                                            Disponible
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="detail-item">
                                     <div class="detail-label">DURÉE</div>
-                                    <div class="detail-value">{{ $formation->duree }} jours</div>
-                                </div>
-                                <div class="detail-item">
-                                    <div class="detail-label">TARIF</div>
-                                    <div class="detail-value">{{ number_format($formation->tarif, 2) }} DH</div>
-                                </div>
-                                <div class="detail-item">
-                                    <div class="detail-label">SESSIONS</div>
-                                    <div class="detail-value">{{ $formation->sessions->count() }}</div>
+                                    <div class="detail-value">{{ $course->duree ?? 30 }} jours</div>
                                 </div>
                             </div>
 
-                            @if ($formation->sessions->isNotEmpty())
-                                <div style="margin-top: 12px;">
-                                    <div
-                                        style="font-size: 0.75rem; color: #9499a8; font-weight: 600; margin-bottom: 8px; text-transform: uppercase;">
-                                        Sessions disponibles</div>
-                                    <ul class="sessions-list">
-                                        @foreach ($formation->sessions->take(2) as $session)
-                                            <li class="session-item">
-                                                <span
-                                                    class="session-label">{{ \Carbon\Carbon::parse($session->date_debut)->format('d M Y') }}
-                                                    -
-                                                    {{ \Carbon\Carbon::parse($session->date_fin)->format('d M Y') }}</span>
-                                                <span class="session-date">📍
-                                                    {{ $session->lieu ?? 'Lieu non défini' }}</span>
-                                            </li>
-                                        @endforeach
-                                        @if ($formation->sessions->count() > 2)
-                                            <li class="session-item"
-                                                style="text-align: center; color: #4F6EF7; font-weight: 600;">
-                                                +{{ $formation->sessions->count() - 2 }} autres sessions
-                                            </li>
-                                        @endif
-                                    </ul>
+                            <div class="progress-section">
+                                <div class="progress-label">Progression</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: {{ $progress }}%"></div>
                                 </div>
-                            @endif
+                                <div class="progress-text">{{ $progress }}% complet</div>
+                            </div>
 
                             <div class="card-actions">
-                                <a href="{{ route('apprenant.inscriptions') }}" class="btn-action btn-view">
-                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                                        style="width: 13px;">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                <a href="{{ route('course.detail', $course->id) }}" class="btn-action btn-view">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width: 13px;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
                                     </svg>
-                                    Voir
+                                    Voir le cours
                                 </a>
                             </div>
                         </div>
                     </div>
                 @endforeach
+            </div>
+        @else
+            <div class="empty-state">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                <p>Vous n'avez pas encore de cours</p>
+                <p style="font-size: 0.85rem; margin-top: 8px;"><a href="{{ route('apprenant.inscriptions') }}" style="color: #4F6EF7; text-decoration: none; font-weight: 600;">Consulter les formations disponibles →</a></p>
             </div>
         @endif
     </div>
