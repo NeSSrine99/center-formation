@@ -22,7 +22,7 @@
 
         .dash-wrapper {
             padding: 24px 22px;
-            max-width: 1280px;
+            max-width: 1650px;
             margin: 0 auto;
         }
 
