@@ -11,20 +11,17 @@ use App\Http\Controllers\Api\FormationController;
 */
 
 Route::prefix('formations')->group(function () {
-    // GET all formations
-    Route::get('/', [FormationController::class, 'index'])->name('formations.index');
 
-    // GET formation by ID
+    // Public 
+    Route::get('/', [FormationController::class, 'index'])->name('formations.index');
     Route::get('/{id}', [FormationController::class, 'show'])->name('formations.show');
 
-    // POST create new formation
-    Route::post('/', [FormationController::class, 'store'])->name('formations.store');
-
-    // PUT update formation
-    Route::put('/{id}', [FormationController::class, 'update'])->name('formations.update');
-
-    // DELETE formation
-    Route::delete('/{id}', [FormationController::class, 'destroy'])->name('formations.destroy');
+    // Protected - requires authentication and admin role
+    Route::middleware(['auth:sanctum', 'role:administrateur'])->group(function () {
+        Route::post('/', [FormationController::class, 'store'])->name('formations.store');
+        Route::put('/{id}', [FormationController::class, 'update'])->name('formations.update');
+        Route::delete('/{id}', [FormationController::class, 'destroy'])->name('formations.destroy');
+    });
 });
 
 /*

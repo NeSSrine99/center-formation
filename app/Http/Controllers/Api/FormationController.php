@@ -13,6 +13,9 @@ use Illuminate\Http\JsonResponse;
 
 class FormationController extends Controller
 {
+
+
+
     /**
      * Get all formations
      */

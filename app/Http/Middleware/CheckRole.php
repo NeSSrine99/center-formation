@@ -17,7 +17,10 @@ class CheckRole
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         if (!Auth::check()) {
-            return redirect('/login')->with('error', 'Vous devez être connecté.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthenticated'
+            ], 401);
         }
 
         $user = Auth::user();
@@ -28,6 +31,9 @@ class CheckRole
             }
         }
 
-        return redirect('/dashboard')->with('error', 'Accès refusé. Vous n\'avez pas les permissions requises.');
+        return response()->json([
+            'success' => false,
+            'message' => 'Access denied. Admins only.'
+        ], 403);
     }
 }
