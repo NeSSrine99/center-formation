@@ -786,89 +786,255 @@
                 </div>
                 <div>
                     <div class="logo-text">FormaPro</div>
-                    <div class="logo-sub">Admin Panel</div>
+                    <div class="logo-sub">
+                        @php
+                            $userRole = auth()->user()->role;
+                            $roleName = '';
+
+                            // If role is a model object, get the name property
+                            if (is_object($userRole)) {
+                                $roleName = $userRole->name ?? 'user';
+                            } elseif (is_numeric($userRole)) {
+                                // If it's an ID, map it
+    $roleIdMap = [1 => 'admin', 2 => 'formateur', 3 => 'apprenant'];
+    $roleName = $roleIdMap[$userRole] ?? 'user';
+} else {
+    $roleName = $userRole ?? 'user';
+}
+
+$roleMap = [
+    'admin' => 'Admin Panel',
+    'formateur' => 'Formateur',
+    'apprenant' => 'Apprenant',
+];
+echo $roleMap[$roleName] ?? 'Dashboard';
+                        @endphp
+                    </div>
                 </div>
             </div>
 
             <!-- Navigation -->
             <nav class="sidebar-nav">
 
-                <div class="nav-section-label">Principal</div>
+                @php
+                    $userRole = auth()->user()->role;
+                    $roleName = '';
 
-                <a href="{{ route('admin.dashboard') }}"
-                    class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" data-tip="Dashboard">
-                    <div class="nav-item-icon">
-                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                        </svg>
-                    </div>
-                    <span class="nav-item-label">Dashboard</span>
-                </a>
+                    // If role is a model object, get the name property
+                    if (is_object($userRole)) {
+                        $roleName = $userRole->name ?? 'guest';
+                    } elseif (is_numeric($userRole)) {
+                        // If it's an ID, map it
+    $roleIdMap = [1 => 'administrateur', 2 => 'formateur', 3 => 'apprenant'];
+    $roleName = $roleIdMap[$userRole] ?? 'guest';
+} else {
+    $roleName = $userRole ?? 'guest';
+                    }
+                    $role = $roleName;
+                @endphp
 
-                <div class="nav-section-label">Gestion</div>
+                <!-- ═══════════ ADMIN DASHBOARD ═══════════ -->
+                @if ($role === 'administrateur')
+                    <div class="nav-section-label">Principal</div>
+                    <a href="{{ route('admin.dashboard') }}"
+                        class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
+                        data-tip="Dashboard">
+                        <div class="nav-item-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                        </div>
+                        <span class="nav-item-label">Dashboard</span>
+                    </a>
 
-                <a href="{{ route('admin.users') }}"
-                    class="nav-item {{ request()->routeIs('admin.users*') || request()->routeIs('admin.create-user') || request()->routeIs('admin.edit-user*') ? 'active' : '' }}"
-                    data-tip="Utilisateurs">
-                    <div class="nav-item-icon">
-                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M17 20h5v-1a4 4 0 00-4-4h-1M9 20H4v-1a4 4 0 014-4h1m6-4a4 4 0 11-8 0 4 4 0 018 0zm6-4a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                    </div>
-                    <span class="nav-item-label">Utilisateurs</span>
-                    @php $usersCount = \App\Models\User::count(); @endphp
-                    @if ($usersCount > 0)
-                        <span class="nav-badge">{{ $usersCount }}</span>
-                    @endif
-                </a>
+                    <div class="nav-section-label">Gestion</div>
 
-                <a href="{{ route('admin.formations') }}"
-                    class="nav-item {{ request()->routeIs('admin.formations*') || request()->routeIs('admin.create-formation') || request()->routeIs('admin.edit-formation*') ? 'active' : '' }}"
-                    data-tip="Formations">
-                    <div class="nav-item-icon">
-                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                    </div>
-                    <span class="nav-item-label">Formations</span>
-                    @php $formCount = \App\Models\Formation::count(); @endphp
-                    @if ($formCount > 0)
-                        <span class="nav-badge" style="background:#06b6d4;">{{ $formCount }}</span>
-                    @endif
-                </a>
+                    <a href="{{ route('admin.users') }}"
+                        class="nav-item {{ request()->routeIs('admin.users*') || request()->routeIs('admin.create-user') || request()->routeIs('admin.edit-user*') ? 'active' : '' }}"
+                        data-tip="Utilisateurs">
+                        <div class="nav-item-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M17 20h5v-1a4 4 0 00-4-4h-1M9 20H4v-1a4 4 0 014-4h1m6-4a4 4 0 11-8 0 4 4 0 018 0zm6-4a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+                        <span class="nav-item-label">Utilisateurs</span>
+                        @php $usersCount = \App\Models\User::count(); @endphp
+                        @if ($usersCount > 0)
+                            <span class="nav-badge">{{ $usersCount }}</span>
+                        @endif
+                    </a>
 
-                <a href="{{ route('admin.sessions') }}"
-                    class="nav-item {{ request()->routeIs('admin.sessions*') || request()->routeIs('admin.create-session') || request()->routeIs('admin.edit-session*') ? 'active' : '' }}"
-                    data-tip="Sessions">
-                    <div class="nav-item-icon">
-                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M8 7V3m8 4V3M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                    </div>
-                    <span class="nav-item-label">Sessions</span>
-                    @php $sessCount = \App\Models\FormationSession::where('statut','ouverte')->count(); @endphp
-                    @if ($sessCount > 0)
-                        <span class="nav-badge" style="background:#f76c8f;">{{ $sessCount }}</span>
-                    @endif
-                </a>
+                    <a href="{{ route('admin.formations') }}"
+                        class="nav-item {{ request()->routeIs('admin.formations*') || request()->routeIs('admin.create-formation') || request()->routeIs('admin.edit-formation*') ? 'active' : '' }}"
+                        data-tip="Formations">
+                        <div class="nav-item-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <span class="nav-item-label">Formations</span>
+                        @php $formCount = \App\Models\Formation::count(); @endphp
+                        @if ($formCount > 0)
+                            <span class="nav-badge" style="background:#06b6d4;">{{ $formCount }}</span>
+                        @endif
+                    </a>
 
-                <div class="nav-section-label">Système</div>
+                    <a href="{{ route('admin.sessions') }}"
+                        class="nav-item {{ request()->routeIs('admin.sessions*') || request()->routeIs('admin.create-session') || request()->routeIs('admin.edit-session*') ? 'active' : '' }}"
+                        data-tip="Sessions">
+                        <div class="nav-item-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M8 7V3m8 4V3M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <span class="nav-item-label">Sessions</span>
+                        @php $sessCount = \App\Models\FormationSession::where('statut','ouverte')->count(); @endphp
+                        @if ($sessCount > 0)
+                            <span class="nav-badge" style="background:#f76c8f;">{{ $sessCount }}</span>
+                        @endif
+                    </a>
 
-                <a href="{{ route('admin.settings') }}"
-                    class="nav-item {{ request()->routeIs('admin.settings') ? 'active' : '' }}" data-tip="Paramètres">
-                    <div class="nav-item-icon">
-                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                    </div>
-                    <span class="nav-item-label">Paramètres</span>
-                </a>
+                    <div class="nav-section-label">Système</div>
+
+                    <a href="{{ route('admin.settings') }}"
+                        class="nav-item {{ request()->routeIs('admin.settings') ? 'active' : '' }}"
+                        data-tip="Paramètres">
+                        <div class="nav-item-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+                        <span class="nav-item-label">Paramètres</span>
+                    </a>
+                @endif
+
+                <!-- ═══════════ FORMATEUR DASHBOARD ═══════════ -->
+                @if ($role === 'formateur')
+                    <div class="nav-section-label">Principal</div>
+                    <a href="{{ route('formateur.dashboard') }}"
+                        class="nav-item {{ request()->routeIs('formateur.dashboard') ? 'active' : '' }}"
+                        data-tip="Dashboard">
+                        <div class="nav-item-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                        </div>
+                        <span class="nav-item-label">Dashboard</span>
+                    </a>
+
+                    <div class="nav-section-label">Mes Formations</div>
+
+                    <a href="{{ route('formateur.courses') }}"
+                        class="nav-item {{ request()->routeIs('formateur.courses*') ? 'active' : '' }}"
+                        data-tip="Mes Cours">
+                        <div class="nav-item-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <span class="nav-item-label">Mes Cours</span>
+                    </a>
+
+                    <a href="{{ route('formateur.materials') }}"
+                        class="nav-item {{ request()->routeIs('formateur.materials*') ? 'active' : '' }}"
+                        data-tip="Matériels">
+                        <div class="nav-item-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 14l6-6m-5.5.5h.01m4 4h.01m4 4h.01M9 7.5A4.5 4.5 0 1018 7.5A4.5 4.5 0 009 7.5z" />
+                            </svg>
+                        </div>
+                        <span class="nav-item-label">Matériels</span>
+                    </a>
+
+                    <a href="{{ route('formateur.students') }}"
+                        class="nav-item {{ request()->routeIs('formateur.students*') ? 'active' : '' }}"
+                        data-tip="Étudiants">
+                        <div class="nav-item-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M17 20h5v-1a4 4 0 00-4-4h-1M9 20H4v-1a4 4 0 014-4h1m6-4a4 4 0 11-8 0 4 4 0 018 0zm6-4a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </div>
+                        <span class="nav-item-label">Étudiants</span>
+                    </a>
+                @endif
+
+                <!-- ═══════════ APPRENANT DASHBOARD ═══════════ -->
+                @if ($role === 'apprenant')
+                    <div class="nav-section-label">Principal</div>
+                    <a href="{{ route('apprenant.dashboard') }}"
+                        class="nav-item {{ request()->routeIs('apprenant.dashboard') ? 'active' : '' }}"
+                        data-tip="Dashboard">
+                        <div class="nav-item-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                        </div>
+                        <span class="nav-item-label">Dashboard</span>
+                    </a>
+
+                    <div class="nav-section-label">Mon Apprentissage</div>
+
+                    <a href="{{ route('apprenant.courses') }}"
+                        class="nav-item {{ request()->routeIs('apprenant.courses*') ? 'active' : '' }}"
+                        data-tip="Mes Cours">
+                        <div class="nav-item-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <span class="nav-item-label">Mes Cours</span>
+                    </a>
+
+                    <a href="{{ route('apprenant.inscriptions') }}"
+                        class="nav-item {{ request()->routeIs('apprenant.inscriptions*') ? 'active' : '' }}"
+                        data-tip="Inscriptions">
+                        <div class="nav-item-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <span class="nav-item-label">Inscriptions</span>
+                    </a>
+
+                    <a href="{{ route('apprenant.progress') }}"
+                        class="nav-item {{ request()->routeIs('apprenant.progress*') ? 'active' : '' }}"
+                        data-tip="Progression">
+                        <div class="nav-item-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <span class="nav-item-label">Ma Progression</span>
+                    </a>
+
+                    <a href="{{ route('apprenant.materials') }}"
+                        class="nav-item {{ request()->routeIs('apprenant.materials*') ? 'active' : '' }}"
+                        data-tip="Matériels">
+                        <div class="nav-item-icon">
+                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 14l6-6m-5.5.5h.01m4 4h.01m4 4h.01M9 7.5A4.5 4.5 0 1018 7.5A4.5 4.5 0 009 7.5z" />
+                            </svg>
+                        </div>
+                        <span class="nav-item-label">Matériels</span>
+                    </a>
+                @endif
+
+                <div class="nav-section-label">Autres</div>
 
                 <a href="{{ route('home') }}" class="nav-item" data-tip="Retour au site">
                     <div class="nav-item-icon">
@@ -888,7 +1054,30 @@
                     </div>
                     <div class="user-info">
                         <div class="user-name">{{ auth()->user()->name }}</div>
-                        <div class="user-role">Administrateur</div>
+                        <div class="user-role">
+                            @php
+                                $userRole = auth()->user()->role;
+                                $roleName = '';
+
+                                // If role is a model object, get the name property
+                                if (is_object($userRole)) {
+                                    $roleName = $userRole->name ?? 'user';
+                                } elseif (is_numeric($userRole)) {
+                                    // If it's an ID, map it
+    $roleIdMap = [1 => 'admin', 2 => 'formateur', 3 => 'apprenant'];
+    $roleName = $roleIdMap[$userRole] ?? 'user';
+} else {
+    $roleName = $userRole ?? 'user';
+}
+
+$roleLabels = [
+    'admin' => 'Administrateur',
+    'formateur' => 'Formateur',
+    'apprenant' => 'Apprenant',
+];
+echo $roleLabels[$roleName] ?? 'Utilisateur';
+                            @endphp
+                        </div>
                     </div>
                 </div>
             </div>
