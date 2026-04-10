@@ -269,4 +269,50 @@ class AdminController extends Controller
 
         return redirect()->route('admin.sessions')->with('success', 'Session supprimée avec succès.');
     }
+
+    // --- Inscriptions Management ---
+
+    public function inscriptions(Request $request)
+    {
+        $query = \App\Models\Inscription::with(['apprenant.user', 'session.formation']);
+
+        // Filter by status
+        if ($status = $request->input('status')) {
+            $query->where('statut', $status);
+        }
+
+        // Filter by formation
+        if ($formationId = $request->input('formation_id')) {
+            $query->whereHas('session.formation', function ($q) use ($formationId) {
+                $q->where('id', $formationId);
+            });
+        }
+
+        // Search by apprenant name or email
+        if ($search = $request->input('search')) {
+            $query->whereHas('apprenant.user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $perPage = (int) $request->input('per_page', 15);
+        if (!in_array($perPage, [10, 15, 25, 50], true)) {
+            $perPage = 15;
+        }
+
+        $inscriptions = $query->orderBy('created_at', 'desc')->paginate($perPage)->withQueryString();
+        $formations = Formation::all();
+
+        // Stats
+        $stats = [
+            'total' => \App\Models\Inscription::count(),
+            'en_attente' => \App\Models\Inscription::where('statut', 'en_attente')->count(),
+            'validée' => \App\Models\Inscription::where('statut', 'validée')->count(),
+            'refusée' => \App\Models\Inscription::where('statut', 'refusée')->count(),
+            'payée' => \App\Models\Inscription::where('paiement', true)->count(),
+        ];
+
+        return view('admin.inscriptions.index', compact('inscriptions', 'formations', 'stats'));
+    }
 }

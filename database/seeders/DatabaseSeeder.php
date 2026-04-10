@@ -209,24 +209,41 @@ class DatabaseSeeder extends Seeder
         // --------------------
         // 8️⃣ Create Inscriptions
         // --------------------
+        $statusOptions = ['en_attente', 'validée', 'refusée'];
+
         foreach ($apprenants as $apprenant) {
             $randomSessions = collect($sessions)->random(min(3, count($sessions)));
 
             foreach ($randomSessions as $session) {
+                $statut = $statusOptions[array_rand($statusOptions)];
+                $paiement = $statut === 'validée' ? (bool) rand(0, 1) : false;
+
                 Inscription::firstOrCreate(
                     [
                         'apprenant_id' => $apprenant->id,
-                        'session_id' => $session->id,
+                        'session_formation_id' => $session->id,
                     ],
                     [
-                        'statut' => ['en_attente', 'valide', 'annule'][rand(0, 2)],
+                        'statut' => $statut,
+                        'paiement' => $paiement,
                         'date_inscription' => Carbon::now()->subDays(rand(1, 15)),
                     ]
                 );
             }
         }
 
+        $paidCount = Inscription::where('paiement', true)->count();
+
         $this->command->info('✅ Database seeded successfully!');
+        $this->command->info('📊 Created:');
+        $this->command->info('  - 3 Roles (Admin, Formateur, Apprenant)');
+        $this->command->info('  - 1 Admin user');
+        $this->command->info('  - ' . count($formateurs) . ' Formateurs');
+        $this->command->info('  - ' . count($apprenants) . ' Apprenants');
+        $this->command->info('  - ' . count($createdFormations) . ' Formations');
+        $this->command->info('  - ' . count($sessions) . ' Sessions de formation');
+        $this->command->info('  - ' . Inscription::count() . ' Inscriptions');
+        $this->command->info('  - ' . $paidCount . ' Inscriptions payées');
         $this->command->info('📊 Created:');
         $this->command->info('  - 3 Roles (Admin, Formateur, Apprenant)');
         $this->command->info('  - 1 Admin user');

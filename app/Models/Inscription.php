@@ -11,8 +11,9 @@ class Inscription extends Model
 
     protected $fillable = [
         'apprenant_id',
-        'session_id',
+        'session_formation_id',
         'statut',
+        'paiement',
         'date_inscription'
     ];
 
@@ -23,6 +24,6 @@ class Inscription extends Model
 
     public function session()
     {
-        return $this->belongsTo(FormationSession::class, 'session_id');
+        return $this->belongsTo(FormationSession::class, 'session_formation_id');
     }
 }

@@ -418,7 +418,7 @@
     ━━━━━━━━━━━━━━━━━━━━━━ */
         .quick-nav {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 12px;
             margin-bottom: 16px;
         }
@@ -472,6 +472,10 @@
         }
 
         .nav-btn-4::before {
+            background: linear-gradient(90deg, #0ea5e9, #0284c7);
+        }
+
+        .nav-btn-5::before {
             background: linear-gradient(90deg, #f79f57, #f7776c);
         }
 
@@ -1050,7 +1054,25 @@
                 </div>
             </a>
 
-            <a href="{{ route('admin.settings') }}" class="nav-btn nav-btn-4">
+            <a href="{{ route('admin.inscriptions') }}" class="nav-btn nav-btn-4">
+                <div class="nav-btn-icon" style="background:#f0f9ff;">
+                    <svg fill="none" stroke="#0ea5e9" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 12l2 2 4-4M7 20H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v15a2 2 0 01-2 2h-2" />
+                    </svg>
+                </div>
+                <div>
+                    <div class="nav-btn-title">Inscriptions</div>
+                    <div class="nav-btn-desc">Valider & gérer</div>
+                </div>
+                <div class="nav-btn-arrow">
+                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
+
+            <a href="{{ route('admin.settings') }}" class="nav-btn nav-btn-5">
                 <div class="nav-btn-icon" style="background:#fff7ed;">
                     <svg fill="none" stroke="#f79f57" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"

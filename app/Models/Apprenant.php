@@ -25,4 +25,9 @@ class Apprenant extends Model
     {
         return $this->hasMany(Inscription::class);
     }
+
+    public function sessions()
+    {
+        return $this->belongsToMany(FormationSession::class, 'inscriptions', 'apprenant_id', 'session_formation_id');
+    }
 }

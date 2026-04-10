@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FormateurController;
 use App\Http\Controllers\ApprenantController;
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\InscriptionController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -67,6 +68,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/admin/sessions/{id}', [AdminController::class, 'updateSession'])->middleware('role:administrateur')->name('admin.update-session');
     Route::delete('/admin/sessions/{id}', [AdminController::class, 'deleteSession'])->middleware('role:administrateur')->name('admin.delete-session');
 
+    // Admin inscriptions
+    Route::get('/admin/inscriptions', [AdminController::class, 'inscriptions'])->middleware('role:administrateur')->name('admin.inscriptions');
+    Route::patch('/admin/inscriptions/{id}/valider', [InscriptionController::class, 'valider'])->middleware('role:administrateur')->name('admin.inscriptions.valider');
+    Route::patch('/admin/inscriptions/{id}/refuser', [InscriptionController::class, 'refuser'])->middleware('role:administrateur')->name('admin.inscriptions.refuser');
+    Route::patch('/admin/inscriptions/{id}/payer', [InscriptionController::class, 'marquerPayee'])->middleware('role:administrateur')->name('admin.inscriptions.payer');
+
     Route::get('/formateur/dashboard', [FormateurController::class, 'dashboard'])->middleware('role:formateur')->name('formateur.dashboard');
     Route::get('/formateur/courses', [FormateurController::class, 'courses'])->middleware('role:formateur')->name('formateur.courses');
     Route::get('/formateur/students', [FormateurController::class, 'students'])->middleware('role:formateur')->name('formateur.students');
@@ -77,8 +84,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/apprenant/progress', [ApprenantController::class, 'progress'])->middleware('role:apprenant')->name('apprenant.progress');
     Route::get('/apprenant/materials', [ApprenantController::class, 'materials'])->middleware('role:apprenant')->name('apprenant.materials');
     Route::get('/apprenant/inscriptions', [ApprenantController::class, 'inscriptions'])->middleware('role:apprenant')->name('apprenant.inscriptions');
-    Route::post('/apprenant/inscrire', [ApprenantController::class, 'inscrire'])->middleware('role:apprenant')->name('apprenant.inscrire');
-    Route::delete('/apprenant/inscription/{id}', [ApprenantController::class, 'cancel'])->middleware('role:apprenant')->name('apprenant.cancel');
+    Route::post('/apprenant/inscrire', [InscriptionController::class, 'inscrire'])->middleware('role:apprenant')->name('apprenant.inscrire');
+    Route::delete('/apprenant/inscription/{id}', [InscriptionController::class, 'annuler'])->middleware('role:apprenant')->name('apprenant.cancel');
 });
 
 Route::middleware('auth')->group(function () {

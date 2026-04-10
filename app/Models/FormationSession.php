@@ -27,6 +27,17 @@ class FormationSession extends Model
 
     public function inscriptions()
     {
-        return $this->hasMany(Inscription::class, 'session_id');
+        return $this->hasMany(Inscription::class, 'session_formation_id');
+    }
+
+    public function apprenants()
+    {
+        return $this->belongsToMany(Apprenant::class, 'inscriptions', 'session_formation_id', 'apprenant_id');
+    }
+
+    public function getAvailablePlacesAttribute()
+    {
+        return $this->capacite - $this->inscriptions()->where('statut', 'validée')->count();
     }
 }
+

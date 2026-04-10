@@ -140,6 +140,442 @@
             margin-top: 6px;
         }
 
+        /* Welcome Section */
+        .welcome-section {
+            background: linear-gradient(135deg, #4F6EF7 0%, #06b6d4 100%);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .welcome-content h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0 0 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .welcome-content p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .welcome-stats {
+            display: flex;
+            gap: 24px;
+        }
+
+        .welcome-stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            margin-bottom: 32px;
+        }
+
+        .quick-actions h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1a1d23;
+            margin: 0 0 20px;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .action-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1.5px solid #f0f1f5;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s;
+            color: #1a1d23;
+        }
+
+        .action-card:hover {
+            border-color: #d4d8ff;
+            box-shadow: 0 8px 24px rgba(79, 110, 247, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .action-content h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 0 0 4px;
+        }
+
+        .action-content p {
+            font-size: 0.85rem;
+            color: #9499a8;
+            margin: 0;
+        }
+
+        .action-arrow {
+            margin-left: auto;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #f5f6fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .action-card:hover .action-arrow {
+            background: #4F6EF7;
+            color: #fff;
+        }
+
+        /* Dashboard Content Layout */
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .content-left {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .content-right {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .content-card {
+            background: #fff;
+            border-radius: 16px;
+            border: 1.5px solid #f0f1f5;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #f0f1f5;
+        }
+
+        .card-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a1d23;
+            margin: 0 0 4px;
+        }
+
+        .card-header p {
+            font-size: 0.85rem;
+            color: #9499a8;
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Sessions List */
+        .sessions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .session-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px solid #f0f1f5;
+            transition: background 0.2s;
+        }
+
+        .session-item:hover {
+            background: #f3f4f8;
+        }
+
+        .session-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #4F6EF7, #06b6d4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .session-info h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1a1d23;
+            margin: 0 0 4px;
+        }
+
+        .session-info p {
+            font-size: 0.8rem;
+            color: #9499a8;
+            margin: 0 0 4px;
+        }
+
+        .session-location {
+            font-size: 0.75rem;
+            color: #4F6EF7;
+            font-weight: 600;
+        }
+
+        .session-status {
+            margin-left: auto;
+        }
+
+        /* Available Sessions */
+        .available-sessions {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .available-session {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px solid #f0f1f5;
+        }
+
+        .session-details h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1a1d23;
+            margin: 0 0 6px;
+        }
+
+        .session-details p {
+            font-size: 0.8rem;
+            color: #9499a8;
+            margin: 0 0 8px;
+        }
+
+        .session-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: #4F6EF7;
+            font-weight: 600;
+        }
+
+        .btn-enroll {
+            background: linear-gradient(135deg, #4F6EF7, #06b6d4);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-enroll:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 110, 247, 0.3);
+        }
+
+        /* Progress Overview */
+        .progress-overview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .progress-circle {
+            position: relative;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .progress-percent {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #4F6EF7;
+            display: block;
+        }
+
+        .progress-label {
+            font-size: 0.75rem;
+            color: #9499a8;
+            font-weight: 600;
+        }
+
+        .progress-stats {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .progress-stat {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .progress-stat .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #4F6EF7;
+            display: block;
+        }
+
+        .progress-stat .stat-label {
+            font-size: 0.75rem;
+            color: #9499a8;
+            font-weight: 600;
+        }
+
+        /* Stats List */
+        .stats-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .stat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-info .stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a1d23;
+            display: block;
+        }
+
+        .stat-info .stat-label {
+            font-size: 0.8rem;
+            color: #9499a8;
+        }
+
+        /* View More */
+        .view-more {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .view-more a {
+            color: #4F6EF7;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .view-more a:hover {
+            text-decoration: underline;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #9499a8;
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            opacity: 0.3;
+            margin-bottom: 12px;
+            display: block;
+            margin-inline: auto;
+        }
+
+        .empty-state p {
+            margin: 0 0 12px;
+        }
+
+        .btn-link {
+            color: #4F6EF7;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
         .w-card {
             background: #fff;
             border-radius: 18px;
@@ -378,6 +814,14 @@
             .stat-cards {
                 grid-template-columns: repeat(2, 1fr);
             }
+
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
@@ -392,181 +836,334 @@
             .stat-cards {
                 grid-template-columns: 1fr;
             }
+
+            .welcome-section {
+                padding: 24px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .welcome-content h1 {
+                font-size: 1.6rem;
+            }
+
+            .welcome-stats {
+                justify-content: center;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .available-session {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+
+            .session-action {
+                width: 100%;
+            }
+
+            .btn-enroll {
+                width: 100%;
+            }
+
+            .progress-stats {
+                flex-direction: column;
+                gap: 8px;
+            }
         }
     </style>
 
     <div class="dash-wrapper">
 
-        {{-- ── TOP BAR ── --}}
-        <div class="top-bar">
-            <div class="top-bar-left">
-                <h1>Dashboard Apprenant</h1>
-                <p>Bienvenue sur votre espace d'apprentissage 👋</p>
+        {{-- ── WELCOME SECTION ── --}}
+        <div class="welcome-section">
+            <div class="welcome-content">
+                <h1>Bonjour, {{ auth()->user()->name }} ! 👋</h1>
+                <p>Bienvenue sur votre espace d'apprentissage. Voici un aperçu de votre progression.</p>
+            </div>
+            <div class="welcome-stats">
+                <div class="welcome-stat">
+                    <div class="stat-number">{{ $enrolledFormations->count() }}</div>
+                    <div class="stat-label">Formations actives</div>
+                </div>
+                <div class="welcome-stat">
+                    <div class="stat-number">{{ $activeInscriptions->count() }}</div>
+                    <div class="stat-label">Sessions en cours</div>
+                </div>
+                <div class="welcome-stat">
+                    <div class="stat-number">{{ $availableSessions->count() }}</div>
+                    <div class="stat-label">Sessions disponibles</div>
+                </div>
             </div>
         </div>
 
-        {{-- ── STAT CARDS ── --}}
-        <div class="stat-cards">
-            {{-- Formations Disponibles --}}
-            <div class="stat-card stat-card-1">
-                <div class="stat-card-icon">
-                    <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                </div>
-                <div class="stat-card-label">Formations Disponibles</div>
-                <div class="stat-card-value">{{ $myFormations->count() }}</div>
-                <div class="stat-card-sub">À découvrir</div>
-            </div>
+        {{-- ── QUICK ACTIONS ── --}}
+        <div class="quick-actions">
+            <h2>Actions rapides</h2>
+            <div class="actions-grid">
+                <a href="{{ route('apprenant.inscriptions') }}" class="action-card">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #3db9e5, #2196f3);">
+                        <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                    </div>
+                    <div class="action-content">
+                        <h3>S'inscrire à une formation</h3>
+                        <p>Découvrez et rejoignez de nouvelles formations</p>
+                    </div>
+                    <div class="action-arrow">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </a>
 
-            {{-- Inscriptions Actives --}}
-            <div class="stat-card stat-card-2">
-                <div class="stat-card-icon">
-                    <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M9 12l2 2 4-4M7 20H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v15a2 2 0 01-2 2h-2" />
-                    </svg>
-                </div>
-                <div class="stat-card-label">Inscriptions Actives</div>
-                <div class="stat-card-value">{{ $inscriptions->count() }}</div>
-                <div class="stat-card-sub">En cours</div>
-            </div>
+                <a href="{{ route('apprenant.courses') }}" class="action-card">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                    </div>
+                    <div class="action-content">
+                        <h3>Mes cours</h3>
+                        <p>Accédez à vos formations en cours</p>
+                    </div>
+                    <div class="action-arrow">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </a>
 
-            {{-- Sessions Restantes --}}
-            <div class="stat-card stat-card-3">
-                <div class="stat-card-icon">
-                    <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M8 7V3m8 4V3M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                </div>
-                <div class="stat-card-label">Sessions Restantes</div>
-                <div class="stat-card-value">{{ \App\Models\FormationSession::where('statut', 'ouverte')->count() }}
-                </div>
-                <div class="stat-card-sub">Disponibles</div>
-            </div>
+                <a href="{{ route('apprenant.materials') }}" class="action-card">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                    <div class="action-content">
+                        <h3>Matériels de cours</h3>
+                        <p>Téléchargez vos ressources pédagogiques</p>
+                    </div>
+                    <div class="action-arrow">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </a>
 
-            {{-- Niveau --}}
-            <div class="stat-card stat-card-4">
-                <div class="stat-card-icon">
-                    <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <div class="stat-card-label">Mon Niveau</div>
-                <div class="stat-card-value">{{ auth()->user()->apprenant?->niveau ?? 'N/A' }}</div>
-                <div class="stat-card-sub">Progression</div>
+                <a href="{{ route('apprenant.progress') }}" class="action-card">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                        <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                    <div class="action-content">
+                        <h3>Ma progression</h3>
+                        <p>Suivez vos avancées et résultats</p>
+                    </div>
+                    <div class="action-arrow">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </a>
             </div>
         </div>
 
-        {{-- ── QUICK NAV ── --}}
-        <div class="quick-nav">
-            <a href="{{ route('apprenant.courses') }}" class="nav-btn nav-btn-1">
-                <div class="nav-btn-icon" style="background:#eff8ff;">
-                    <svg fill="none" stroke="#3db9e5" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                </div>
-                <div>
-                    <div class="nav-btn-title">Mes Formations</div>
-                    <div class="nav-btn-desc">Consulter les cours</div>
-                </div>
-                <div class="nav-btn-arrow">
-                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                </div>
-            </a>
+        {{-- ── DASHBOARD CONTENT ── --}}
+        <div class="dashboard-content">
 
-            <a href="{{ route('apprenant.inscriptions') }}" class="nav-btn nav-btn-2">
-                <div class="nav-btn-icon" style="background:#f0fdf4;">
-                    <svg fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M9 12l2 2 4-4M7 20H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v15a2 2 0 01-2 2h-2" />
-                    </svg>
-                </div>
-                <div>
-                    <div class="nav-btn-title">Mes Inscriptions</div>
-                    <div class="nav-btn-desc">Voir mes sessions</div>
-                </div>
-                <div class="nav-btn-arrow">
-                    <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                </div>
-            </a>
-        </div>
+            {{-- LEFT COLUMN --}}
+            <div class="content-left">
 
-        {{-- ── RECENT INSCRIPTIONS ── --}}
-        <div class="w-card">
-            <div class="w-card-header">
-                <div>
-                    <div class="w-card-title">Timeline de mes inscriptions</div>
-                    <div class="w-card-sub">Vos sessions récentes</div>
-                </div>
-            </div>
-            @if ($inscriptions->isEmpty())
-                <div style="padding: 20px; text-align: center; color: #9499a8;">
-                    <svg style="width: 48px; height: 48px; opacity: 0.3; margin-bottom: 10px;" fill="none"
-                        stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M9 12l2 2 4-4M7 20H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v15a2 2 0 01-2 2h-2" />
-                    </svg>
-                    <p style="margin: 0;">Vous n'avez pas encore d'inscriptions</p>
-                </div>
-            @else
-                <table class="sessions-table">
-                    <thead>
-                        <tr>
-                            <th>Formation</th>
-                            <th>Formateur</th>
-                            <th>Début</th>
-                            <th>Fin</th>
-                            <th>Lieu</th>
-                            <th>Statut</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($inscriptions as $idx => $inscription)
-                            @php
-                                $colors = ['#3db9e5', '#10b981', '#f59e0b', '#f7776c', '#8b5cf6'];
-                                $sessionColor = $colors[$idx % count($colors)];
-                            @endphp
-                            <tr>
-                                <td>
-                                    <div class="sess-formation">
-                                        <div class="sess-icon" style="background:{{ $sessionColor }};">
-                                            {{ strtoupper(substr($inscription->session->formation->titre, 0, 1)) }}
+                {{-- UPCOMING SESSIONS --}}
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>Sessions à venir</h3>
+                        <p>Vos prochaines formations</p>
+                    </div>
+                    <div class="card-body">
+                        @if ($activeInscriptions->isNotEmpty())
+                            <div class="sessions-list">
+                                @foreach ($activeInscriptions->take(3) as $inscription)
+                                    <div class="session-item">
+                                        <div class="session-icon">
+                                            <span>{{ strtoupper(substr($inscription->session->formation->titre, 0, 1)) }}</span>
                                         </div>
-                                        <div class="sess-name">{{ $inscription->session->formation->titre }}</div>
+                                        <div class="session-info">
+                                            <h4>{{ $inscription->session->formation->titre }}</h4>
+                                            <p>{{ \Carbon\Carbon::parse($inscription->session->date_debut)->format('d M Y') }} - {{ \Carbon\Carbon::parse($inscription->session->date_fin)->format('d M Y') }}</p>
+                                            <span class="session-location">{{ $inscription->session->lieu ?? 'Lieu non défini' }}</span>
+                                        </div>
+                                        <div class="session-status">
+                                            <span class="status-badge {{ 'badge-' . $inscription->statut }}">
+                                                {{ ucfirst(str_replace('_', ' ', $inscription->statut)) }}
+                                            </span>
+                                        </div>
                                     </div>
-                                </td>
-                                <td>
-                                    @if ($inscription->session->formation->formateurs->first())
-                                        {{ $inscription->session->formation->formateurs->first()->user->name }}
-                                    @else
-                                        <span style="color: #9499a8;">N/A</span>
-                                    @endif
-                                </td>
-                                <td>{{ \Carbon\Carbon::parse($inscription->session->date_debut)->format('d/m/Y') }}
-                                </td>
-                                <td>{{ \Carbon\Carbon::parse($inscription->session->date_fin)->format('d/m/Y') }}</td>
-                                <td>{{ $inscription->session->lieu ?? 'N/A' }}</td>
-                                <td>
-                                    <span class="status-badge {{ 'badge-' . $inscription->statut }}">
-                                        <span class="dot"></span>
-                                        {{ ucfirst(str_replace('_', ' ', $inscription->statut)) }}
-                                    </span>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @endif
+                                @endforeach
+                            </div>
+                            @if ($activeInscriptions->count() > 3)
+                                <div class="view-more">
+                                    <a href="{{ route('apprenant.inscriptions') }}">Voir toutes mes sessions →</a>
+                                </div>
+                            @endif
+                        @else
+                            <div class="empty-state">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <p>Aucune session active</p>
+                                <a href="{{ route('apprenant.inscriptions') }}" class="btn-link">S'inscrire maintenant</a>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- AVAILABLE SESSIONS --}}
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>Formations disponibles</h3>
+                        <p>Nouvelles opportunités d'apprentissage</p>
+                    </div>
+                    <div class="card-body">
+                        @if ($availableSessions->isNotEmpty())
+                            <div class="available-sessions">
+                                @foreach ($availableSessions->take(2) as $session)
+                                    <div class="available-session">
+                                        <div class="session-details">
+                                            <h4>{{ $session->formation->titre }}</h4>
+                                            <p>{{ $session->formation->description ? Str::limit($session->formation->description, 60) : 'Formation complète' }}</p>
+                                            <div class="session-meta">
+                                                <span>{{ \Carbon\Carbon::parse($session->date_debut)->format('d M Y') }}</span>
+                                                <span>{{ $session->capacite - $session->inscriptions()->where('statut', 'valide')->count() }} places restantes</span>
+                                            </div>
+                                        </div>
+                                        <div class="session-action">
+                                            <form method="POST" action="{{ route('apprenant.inscrire') }}">
+                                                @csrf
+                                                <input type="hidden" name="session_id" value="{{ $session->id }}">
+                                                <button type="submit" class="btn-enroll">S'inscrire</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            @if ($availableSessions->count() > 2)
+                                <div class="view-more">
+                                    <a href="{{ route('apprenant.inscriptions') }}">Voir toutes les formations →</a>
+                                </div>
+                            @endif
+                        @else
+                            <div class="empty-state">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                </svg>
+                                <p>Aucune formation disponible actuellement</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+            </div>
+
+            {{-- RIGHT COLUMN --}}
+            <div class="content-right">
+
+                {{-- PROGRESS OVERVIEW --}}
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>Ma progression</h3>
+                        <p>Aperçu de vos avancées</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="progress-overview">
+                            <div class="progress-circle">
+                                <svg width="120" height="120" viewBox="0 0 120 120">
+                                    <circle cx="60" cy="60" r="50" stroke="#f0f1f5" stroke-width="8" fill="none"/>
+                                    <circle cx="60" cy="60" r="50" stroke="#4F6EF7" stroke-width="8" fill="none"
+                                            stroke-dasharray="{{ 2 * 3.14159 * 50 }}"
+                                            stroke-dashoffset="{{ 2 * 3.14159 * 50 * (1 - ($enrolledFormations->count() > 0 ? 0.75 : 0)) }}"
+                                            transform="rotate(-90 60 60)"/>
+                                </svg>
+                                <div class="progress-text">
+                                    <span class="progress-percent">{{ $enrolledFormations->count() > 0 ? '75' : '0' }}%</span>
+                                    <span class="progress-label">Complet</span>
+                                </div>
+                            </div>
+                            <div class="progress-stats">
+                                <div class="progress-stat">
+                                    <span class="stat-value">{{ $enrolledFormations->count() }}</span>
+                                    <span class="stat-label">Formations</span>
+                                </div>
+                                <div class="progress-stat">
+                                    <span class="stat-value">{{ $activeInscriptions->count() }}</span>
+                                    <span class="stat-label">Sessions</span>
+                                </div>
+                                <div class="progress-stat">
+                                    <span class="stat-value">{{ $userLevel ?? 'Débutant' }}</span>
+                                    <span class="stat-label">Niveau</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- QUICK STATS --}}
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>Statistiques</h3>
+                        <p>Résumé de votre activité</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-list">
+                            <div class="stat-item">
+                                <div class="stat-icon" style="background: #eff3ff; color: #4F6EF7;">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-value">{{ $enrolledFormations->count() }}</span>
+                                    <span class="stat-label">Formations inscrites</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-item">
+                                <div class="stat-icon" style="background: #f0fdf4; color: #10b981;">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7 20H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v15a2 2 0 01-2 2h-2"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-value">{{ $activeInscriptions->count() }}</span>
+                                    <span class="stat-label">Sessions actives</span>
+                                </div>
+                            </div>
+
+                            <div class="stat-item">
+                                <div class="stat-icon" style="background: #fef3e2; color: #f59e0b;">
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-value">{{ $availableSessions->count() }}</span>
+                                    <span class="stat-label">Sessions disponibles</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
+
     </div>
 
 </x-admin-layout>
