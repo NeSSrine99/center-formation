@@ -17,6 +17,10 @@ class InscriptionController extends Controller
     {
         $request->validate([
             'session_id' => 'required|exists:sessions_formations,id',
+            'payment_method' => 'required|string|in:card,transfer,cash',
+            'payment_reference' => 'required|string|max:255',
+            'payment_amount' => 'required|numeric|min:0',
+            'payment_notes' => 'nullable|string|max:1000',
         ]);
 
         $user = auth()->user();
@@ -39,7 +43,7 @@ class InscriptionController extends Controller
             'apprenant_id' => $apprenant->id,
             'session_formation_id' => $request->session_id,
             'statut' => 'en_attente',
-            'paiement' => false
+            'paiement' => true,
         ]);
 
         $session = FormationSession::find($request->session_id);
@@ -53,6 +57,10 @@ class InscriptionController extends Controller
             'data' => [
                 'session_id' => $request->session_id,
                 'formation_id' => $session->formation->id,
+                'payment_method' => $request->payment_method,
+                'payment_reference' => $request->payment_reference,
+                'payment_amount' => $request->payment_amount,
+                'payment_notes' => $request->payment_notes,
             ]
         ]);
 
@@ -71,6 +79,10 @@ class InscriptionController extends Controller
                     'apprenant_id' => $apprenant->id,
                     'session_id' => $request->session_id,
                     'formation_id' => $session->formation->id,
+                    'payment_method' => $request->payment_method,
+                    'payment_reference' => $request->payment_reference,
+                    'payment_amount' => $request->payment_amount,
+                    'payment_notes' => $request->payment_notes,
                 ]
             ]);
         }
@@ -88,6 +100,10 @@ class InscriptionController extends Controller
                     'apprenant_id' => $apprenant->id,
                     'session_id' => $request->session_id,
                     'formation_id' => $session->formation->id,
+                    'payment_method' => $request->payment_method,
+                    'payment_reference' => $request->payment_reference,
+                    'payment_amount' => $request->payment_amount,
+                    'payment_notes' => $request->payment_notes,
                 ]
             ]);
         }

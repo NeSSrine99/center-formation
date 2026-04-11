@@ -476,6 +476,103 @@
             width: 100%;
         }
 
+        .enroll-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.65);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            z-index: 50;
+        }
+
+        .enroll-modal-backdrop.show {
+            display: flex;
+        }
+
+        .enroll-modal {
+            width: min(100%, 540px);
+            background: #fff;
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 24px 80px rgba(15, 23, 42, 0.18);
+            position: relative;
+        }
+
+        .enroll-modal h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .enroll-modal p {
+            margin-bottom: 20px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .enroll-modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 999px;
+            background: #f3f4f6;
+            color: #111827;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .enroll-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .enroll-form-group label {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.9rem;
+        }
+
+        .enroll-form-group input,
+        .enroll-form-group select,
+        .enroll-form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #d1d5db;
+            background: #f9fafb;
+            color: #111827;
+            font-size: 0.95rem;
+        }
+
+        .enroll-form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn-enroll {
+            width: 100%;
+            background: linear-gradient(135deg, #4F6EF7, #06b6d4);
+            color: white;
+            border: none;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-enroll:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(79, 110, 247, 0.25);
+        }
+
         .session-info-card {
             background: #f9fafb;
             border-radius: 8px;
@@ -838,16 +935,15 @@
                                     </div>
 
                                     <div class="formation-action">
-                                        <form method="POST" action="{{ route('apprenant.inscrire') }}" style="width: 100%;">
-                                            @csrf
-                                            <input type="hidden" name="session_id" value="{{ $session->id }}">
-                                            <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
-                                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width: 16px;">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
-                                                </svg>
-                                                S'inscrire
-                                            </button>
-                                        </form>
+                                        <button type="button" class="btn-primary open-enroll-modal" style="width: 100%; justify-content: center;"
+                                            data-session-id="{{ $session->id }}"
+                                            data-session-title="{{ $session->formation->titre }}"
+                                            data-session-dates="{{ \Carbon\Carbon::parse($session->date_debut)->format('d M Y') }} - {{ \Carbon\Carbon::parse($session->date_fin)->format('d M Y') }}">
+                                            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width: 16px;">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                                            </svg>
+                                            S'inscrire
+                                        </button>
                                     </div>
                                 </div>
                             @endforeach
@@ -874,5 +970,74 @@
 
         </div>
     </div>
+
+    <div class="enroll-modal-backdrop" id="enrollModalBackdrop">
+        <div class="enroll-modal">
+            <button type="button" class="enroll-modal-close" id="enrollModalClose">×</button>
+            <h3>Inscription à la session</h3>
+            <p id="enrollModalTitle">Remplissez le formulaire pour finaliser votre inscription.</p>
+
+            <form method="POST" action="{{ route('apprenant.inscrire') }}">
+                @csrf
+                <input type="hidden" name="session_id" id="enrollSessionId">
+
+                <div class="enroll-form-group">
+                    <label for="payment_method">Méthode de paiement</label>
+                    <select name="payment_method" id="payment_method" required>
+                        <option value="">Sélectionnez une option</option>
+                        <option value="card">Carte bancaire</option>
+                        <option value="transfer">Virement bancaire</option>
+                        <option value="cash">Espèces</option>
+                    </select>
+                </div>
+
+                <div class="enroll-form-group">
+                    <label for="payment_reference">Référence de paiement</label>
+                    <input type="text" id="payment_reference" name="payment_reference" placeholder="Ex: REF123456" required>
+                </div>
+
+                <div class="enroll-form-group">
+                    <label for="payment_amount">Montant à payer</label>
+                    <input type="number" step="0.01" id="payment_amount" name="payment_amount" placeholder="Ex: 199.99" required>
+                </div>
+
+                <div class="enroll-form-group">
+                    <label for="payment_notes">Notes</label>
+                    <textarea id="payment_notes" name="payment_notes" placeholder="Informations supplémentaires... (facultatif)"></textarea>
+                </div>
+
+                <button type="submit" class="btn-enroll">Envoyer l'inscription</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const enrollModalBackdrop = document.getElementById('enrollModalBackdrop');
+        const enrollModalClose = document.getElementById('enrollModalClose');
+        const enrollSessionId = document.getElementById('enrollSessionId');
+        const enrollModalTitle = document.getElementById('enrollModalTitle');
+
+        document.querySelectorAll('.open-enroll-modal').forEach(button => {
+            button.addEventListener('click', () => {
+                const sessionId = button.dataset.sessionId;
+                const title = button.dataset.sessionTitle;
+                const dates = button.dataset.sessionDates;
+
+                enrollSessionId.value = sessionId;
+                enrollModalTitle.textContent = `Session: ${title} — ${dates}`;
+                enrollModalBackdrop.classList.add('show');
+            });
+        });
+
+        enrollModalClose.addEventListener('click', () => {
+            enrollModalBackdrop.classList.remove('show');
+        });
+
+        enrollModalBackdrop.addEventListener('click', (event) => {
+            if (event.target === enrollModalBackdrop) {
+                enrollModalBackdrop.classList.remove('show');
+            }
+        });
+    </script>
 
 </x-admin-layout>
