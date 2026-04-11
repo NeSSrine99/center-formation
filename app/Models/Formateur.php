@@ -22,7 +22,8 @@ class Formateur extends Model
     }
 
     public function formations()
-    {
-        return $this->belongsToMany(Formation::class, 'formation_formateur');
-    }
+{
+    return $this->belongsToMany(Formation::class, 'formation_formateur')
+        ->withTimestamps();
+}
 }

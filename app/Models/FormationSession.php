@@ -20,6 +20,11 @@ class FormationSession extends Model
         'statut',
     ];
 
+    protected $casts = [
+        'date_debut' => 'datetime',
+        'date_fin' => 'datetime',
+    ];
+
     public function formation()
     {
         return $this->belongsTo(Formation::class);
@@ -37,7 +42,10 @@ class FormationSession extends Model
 
     public function getAvailablePlacesAttribute()
     {
-        return $this->capacite - $this->inscriptions()->where('statut', 'validée')->count();
+        $validCount = $this->inscriptions()
+            ->where('statut', 'validée')
+            ->count();
+
+        return max(0, $this->capacite - $validCount);
     }
 }
-

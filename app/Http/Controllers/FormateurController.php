@@ -3,15 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Formation;
-use App\Models\FormationSession;
 use App\Models\Inscription;
 use App\Models\CourseMaterial;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FormateurController extends Controller
 {
     /**
-     * Display the formateur dashboard.
+     * Dashboard
      */
     public function dashboard()
     {
@@ -19,12 +18,18 @@ class FormateurController extends Controller
     }
 
     /**
-     * Show the courses list.
+     * Courses (FIXED ✅)
      */
     public function courses()
     {
-        // Fetch all courses created by this formateur
-        $courses = Formation::where('formateur_id', auth()->id())
+        $formateur = Auth::user()->formateur;
+
+        if (!$formateur) {
+            abort(403);
+        }
+
+        $courses = $formateur->formations()
+            ->with('sessions')
             ->latest()
             ->get();
 
@@ -32,39 +37,64 @@ class FormateurController extends Controller
     }
 
     /**
-     * Show the students list.
+     * Students (FIXED ✅)
      */
     public function students()
     {
+        $formateur = Auth::user()->formateur;
 
-        $students = Inscription::with(['apprenant', 'session.formation'])
-            ->whereHas('session.formation', function ($q) {
-                $q->where('formateur_id', auth()->id());
+        if (!$formateur) {
+            abort(403);
+        }
+
+        $formationIds = $formateur->formations()->pluck('id');
+
+        $students = Inscription::with(['apprenant.user', 'session.formation'])
+            ->whereHas('session.formation', function ($q) use ($formationIds) {
+                $q->whereIn('id', $formationIds);
             })
             ->latest()
             ->get();
-
 
         return view('formateur.students', compact('students'));
     }
 
     /**
-     * Show course materials.
+     * Materials (FIXED ✅)
      */
     public function materials()
     {
-        // Fetch materials of courses created by this formateur
-        $materials = CourseMaterial::whereHas('formation', fn($q) => $q->where('formateur_id', auth()->id()))
-            ->latest()
-            ->get();
+        $formateur = Auth::user()->formateur;
+
+        if (!$formateur) {
+            abort(403);
+        }
+
+        $formationIds = $formateur->formations()->pluck('id');
+
+        $materials = CourseMaterial::whereHas('formation', function ($q) use ($formationIds) {
+            $q->whereIn('id', $formationIds);
+        })
+        ->latest()
+        ->get();
 
         return view('formateur.materials', compact('materials'));
     }
 
+    /**
+     * Show course
+     */
     public function show($id)
     {
-        $course = Formation::where('id', $id)
-            ->where('formateur_id', auth()->id()) // Only allow viewing your own courses
+        $formateur = Auth::user()->formateur;
+
+        if (!$formateur) {
+            abort(403);
+        }
+
+        $course = $formateur->formations()
+            ->where('formations.id', $id)
+            ->with('sessions')
             ->firstOrFail();
 
         return view('formateur.course-show', compact('course'));

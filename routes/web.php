@@ -10,6 +10,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/', [FrontController::class, 'index'])->name('home');
 Route::get('/courses', [FrontController::class, 'courses'])->name('courses');
 Route::get('/courses/{id}', [FrontController::class, 'courseDetail'])->name('course.detail');
@@ -18,8 +24,13 @@ Route::get('/contact', [FrontController::class, 'contact'])->name('contact');
 Route::post('/contact', [FrontController::class, 'storeContact'])->name('contact.store');
 Route::get('/instructor/{id}', [FrontController::class, 'instructor'])->name('instructor');
 
+/*
+|--------------------------------------------------------------------------
+| Dashboard Redirect
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/dashboard', function () {
-    /** @var User $user */
     $user = Auth::user();
 
     if ($user && $user->isAdministrateur()) {
@@ -33,65 +44,121 @@ Route::get('/dashboard', function () {
     return redirect('/')->with('error', 'Role non reconnu.');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/apprenant/dashboard', [ApprenantController::class, 'dashboard'])
-    ->middleware(['auth', 'verified', 'role:apprenant'])
-    ->name('apprenant.dashboard');
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->middleware('role:administrateur')->name('admin.dashboard');
-    Route::get('/admin/users', [AdminController::class, 'users'])->middleware('role:administrateur')->name('admin.users');
-    Route::get('/admin/users/create', [AdminController::class, 'createUser'])->middleware('role:administrateur')->name('admin.create-user');
-    Route::post('/admin/users', [AdminController::class, 'storeUser'])->middleware('role:administrateur')->name('admin.store-user');
-    Route::get('/admin/users/{id}/edit', [AdminController::class, 'editUser'])->middleware('role:administrateur')->name('admin.edit-user');
-    Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->middleware('role:administrateur')->name('admin.update-user');
-    Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->middleware('role:administrateur')->name('admin.delete-user');
-    Route::get('/admin/settings', [AdminController::class, 'settings'])->middleware('role:administrateur')->name('admin.settings');
 
-    // Admin trainings and sessions
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('role:administrateur')->group(function () {
 
-    Route::get('/formateur/courses/{id}', [FormateurController::class, 'show'])
-        ->middleware('role:formateur')
-        ->name('formateur.courses.show');
+        Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
+        // Users
+        Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+        Route::get('/admin/users/create', [AdminController::class, 'createUser'])->name('admin.create-user');
+        Route::post('/admin/users', [AdminController::class, 'storeUser'])->name('admin.store-user');
+        Route::get('/admin/users/{id}/edit', [AdminController::class, 'editUser'])->name('admin.edit-user');
+        Route::put('/admin/users/{id}', [AdminController::class, 'updateUser'])->name('admin.update-user');
+        Route::delete('/admin/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.delete-user');
 
-    Route::get('/admin/formations', [AdminController::class, 'formations'])->middleware('role:administrateur')->name('admin.formations');
-    Route::get('/admin/formations/create', [AdminController::class, 'createFormation'])->middleware('role:administrateur')->name('admin.create-formation');
-    Route::post('/admin/formations', [AdminController::class, 'storeFormation'])->middleware('role:administrateur')->name('admin.store-formation');
-    Route::get('/admin/formations/{id}/edit', [AdminController::class, 'editFormation'])->middleware('role:administrateur')->name('admin.edit-formation');
-    Route::put('/admin/formations/{id}', [AdminController::class, 'updateFormation'])->middleware('role:administrateur')->name('admin.update-formation');
-    Route::delete('/admin/formations/{id}', [AdminController::class, 'deleteFormation'])->middleware('role:administrateur')->name('admin.delete-formation');
+        Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin.settings');
 
-    Route::get('/admin/sessions', [AdminController::class, 'sessions'])->middleware('role:administrateur')->name('admin.sessions');
-    Route::get('/admin/sessions/create', [AdminController::class, 'createSession'])->middleware('role:administrateur')->name('admin.create-session');
-    Route::post('/admin/sessions', [AdminController::class, 'storeSession'])->middleware('role:administrateur')->name('admin.store-session');
-    Route::get('/admin/sessions/{id}/edit', [AdminController::class, 'editSession'])->middleware('role:administrateur')->name('admin.edit-session');
-    Route::put('/admin/sessions/{id}', [AdminController::class, 'updateSession'])->middleware('role:administrateur')->name('admin.update-session');
-    Route::delete('/admin/sessions/{id}', [AdminController::class, 'deleteSession'])->middleware('role:administrateur')->name('admin.delete-session');
+        // Formations
+        Route::get('/admin/formations', [AdminController::class, 'formations'])->name('admin.formations');
+        Route::get('/admin/formations/create', [AdminController::class, 'createFormation'])->name('admin.create-formation');
+        Route::post('/admin/formations', [AdminController::class, 'storeFormation'])->name('admin.store-formation');
+        Route::get('/admin/formations/{id}/edit', [AdminController::class, 'editFormation'])->name('admin.edit-formation');
+        Route::put('/admin/formations/{id}', [AdminController::class, 'updateFormation'])->name('admin.update-formation');
+        Route::delete('/admin/formations/{id}', [AdminController::class, 'deleteFormation'])->name('admin.delete-formation');
 
-    // Admin inscriptions
-    Route::get('/admin/inscriptions', [AdminController::class, 'inscriptions'])->middleware('role:administrateur')->name('admin.inscriptions');
-    Route::patch('/admin/inscriptions/{id}/valider', [InscriptionController::class, 'valider'])->middleware('role:administrateur')->name('admin.inscriptions.valider');
-    Route::patch('/admin/inscriptions/{id}/refuser', [InscriptionController::class, 'refuser'])->middleware('role:administrateur')->name('admin.inscriptions.refuser');
-    Route::patch('/admin/inscriptions/{id}/payer', [InscriptionController::class, 'marquerPayee'])->middleware('role:administrateur')->name('admin.inscriptions.payer');
+        // Sessions
+        Route::get('/admin/sessions', [AdminController::class, 'sessions'])->name('admin.sessions');
+        Route::get('/admin/sessions/create', [AdminController::class, 'createSession'])->name('admin.create-session');
+        Route::post('/admin/sessions', [AdminController::class, 'storeSession'])->name('admin.store-session');
+        Route::get('/admin/sessions/{id}/edit', [AdminController::class, 'editSession'])->name('admin.edit-session');
+        Route::put('/admin/sessions/{id}', [AdminController::class, 'updateSession'])->name('admin.update-session');
+        Route::delete('/admin/sessions/{id}', [AdminController::class, 'deleteSession'])->name('admin.delete-session');
 
-    Route::get('/formateur/dashboard', [FormateurController::class, 'dashboard'])->middleware('role:formateur')->name('formateur.dashboard');
-    Route::get('/formateur/courses', [FormateurController::class, 'courses'])->middleware('role:formateur')->name('formateur.courses');
-    Route::get('/formateur/students', [FormateurController::class, 'students'])->middleware('role:formateur')->name('formateur.students');
-    Route::get('/formateur/materials', [FormateurController::class, 'materials'])->middleware('role:formateur')->name('formateur.materials');
+        // Inscriptions
+        Route::get('/admin/inscriptions', [AdminController::class, 'inscriptions'])->name('admin.inscriptions');
+        Route::patch('/admin/inscriptions/{id}/valider', [InscriptionController::class, 'valider'])->name('admin.inscriptions.valider');
+        Route::patch('/admin/inscriptions/{id}/refuser', [InscriptionController::class, 'refuser'])->name('admin.inscriptions.refuser');
+        Route::patch('/admin/inscriptions/{id}/payer', [InscriptionController::class, 'marquerPayee'])->name('admin.inscriptions.payer');
 
-    Route::get('/apprenant/dashboard', [ApprenantController::class, 'dashboard'])->middleware('role:apprenant')->name('apprenant.dashboard');
-    Route::get('/apprenant/courses', [ApprenantController::class, 'courses'])->middleware('role:apprenant')->name('apprenant.courses');
-    Route::get('/apprenant/progress', [ApprenantController::class, 'progress'])->middleware('role:apprenant')->name('apprenant.progress');
-    Route::get('/apprenant/materials', [ApprenantController::class, 'materials'])->middleware('role:apprenant')->name('apprenant.materials');
-    Route::get('/apprenant/inscriptions', [ApprenantController::class, 'inscriptions'])->middleware('role:apprenant')->name('apprenant.inscriptions');
-    Route::post('/apprenant/inscrire', [InscriptionController::class, 'inscrire'])->middleware('role:apprenant')->name('apprenant.inscrire');
-    Route::delete('/apprenant/inscription/{id}', [InscriptionController::class, 'annuler'])->middleware('role:apprenant')->name('apprenant.cancel');
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Formateur Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('role:formateur')->group(function () {
+
+        Route::get('/formateur/dashboard', [FormateurController::class, 'dashboard'])->name('formateur.dashboard');
+        Route::get('/formateur/courses', [FormateurController::class, 'courses'])->name('formateur.courses');
+        Route::get('/formateur/courses/{id}', [FormateurController::class, 'show'])->name('formateur.courses.show');
+        Route::get('/formateur/students', [FormateurController::class, 'students'])->name('formateur.students');
+        Route::get('/formateur/materials', [FormateurController::class, 'materials'])->name('formateur.materials');
+
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Apprenant Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('role:apprenant')->group(function () {
+
+        Route::get('/apprenant/dashboard', [ApprenantController::class, 'dashboard'])->name('apprenant.dashboard');
+        Route::get('/apprenant/courses', [ApprenantController::class, 'courses'])->name('apprenant.courses');
+        Route::get('/apprenant/progress', [ApprenantController::class, 'progress'])->name('apprenant.progress');
+        Route::get('/apprenant/materials', [ApprenantController::class, 'materials'])->name('apprenant.materials');
+        Route::get('/apprenant/inscriptions', [ApprenantController::class, 'inscriptions'])->name('apprenant.inscriptions');
+
+        Route::post('/apprenant/inscrire', [InscriptionController::class, 'inscrire'])->name('apprenant.inscrire');
+        Route::delete('/apprenant/inscription/{id}', [InscriptionController::class, 'annuler'])->name('apprenant.cancel');
+
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | General Authenticated Routes (for all user types)
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('auth')->group(function () {
+        // Notifications (accessible to all authenticated users)
+        Route::patch('/notifications/{id}/read', [ApprenantController::class, 'markNotificationRead'])->name('notifications.read');
+        Route::patch('/notifications/mark-all-read', [ApprenantController::class, 'markAllNotificationsRead'])->name('notifications.mark-all-read');
+    });
+
 });
 
+/*
+|--------------------------------------------------------------------------
+| Profile Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware('auth')->group(function () {
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 });
+
+/*
+|--------------------------------------------------------------------------
+| Auth Routes
+|--------------------------------------------------------------------------
+*/
 
 require __DIR__ . '/auth.php';

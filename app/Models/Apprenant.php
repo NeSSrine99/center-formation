@@ -28,6 +28,8 @@ class Apprenant extends Model
 
     public function sessions()
     {
-        return $this->belongsToMany(FormationSession::class, 'inscriptions', 'apprenant_id', 'session_formation_id');
+        return $this->belongsToMany(FormationSession::class, 'inscriptions', 'apprenant_id', 'session_formation_id')
+            ->withPivot('statut', 'paiement')
+            ->withTimestamps();
     }
 }

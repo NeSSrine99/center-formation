@@ -35,7 +35,7 @@ class User extends Authenticatable
     // Relations
     public function role()
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(Role::class)->withDefault();
     }
 
     public function formateur()

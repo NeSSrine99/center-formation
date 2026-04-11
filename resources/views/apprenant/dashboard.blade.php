@@ -1,6 +1,8 @@
 <x-admin-layout>
     @section('header', 'Dashboard Apprenant')
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
 
@@ -878,6 +880,59 @@
 
     <div class="dash-wrapper">
 
+        {{-- FLASH MESSAGES --}}
+        @if(session('success'))
+            <div class="alert alert-success" style="background: #f0fdf4; color: #16a34a; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #bbf7d0;">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width: 20px; height: 20px; margin-right: 8px; display: inline;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-error" style="background: #fef2f2; color: #dc2626; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #fecaca;">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width: 20px; height: 20px; margin-right: 8px; display: inline;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                </svg>
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if(isset($notifications) && $notifications->count() > 0)
+            <div class="w-card" style="margin-bottom: 24px;">
+                <div class="w-card-header">
+                    <div>
+                        <h3 class="w-card-title">Notifications récentes</h3>
+                        <div class="w-card-sub">Suivez l'état de vos inscriptions et paiements.</div>
+                    </div>
+                </div>
+                <div class="card-body" style="padding: 16px;">
+                    @foreach($notifications as $notification)
+                        @php
+                            $isInscription = str_contains($notification->title, 'Inscription') || str_contains($notification->title, 'Paiement');
+                        @endphp
+                        <div class="notif-item {{ $isInscription ? 'inscription-notification' : '' }}" style="margin-bottom: 10px;">
+                            <div class="notif-icon {{ $isInscription ? 'inscription-icon' : '' }}" style="min-width: 36px; min-height: 36px;">
+                                @if($isInscription)
+                                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                @else
+                                    🔔
+                                @endif
+                            </div>
+                            <div class="notif-content">
+                                <div class="notif-title">{{ $notification->title }}</div>
+                                <div class="notif-msg">{{ $notification->message }}</div>
+                                <div class="notif-time">{{ $notification->created_at->diffForHumans() }}</div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
         {{-- ── WELCOME SECTION ── --}}
         <div class="welcome-section">
             <div class="welcome-content">
@@ -907,7 +962,7 @@
                 <a href="{{ route('apprenant.inscriptions') }}" class="action-card">
                     <div class="action-icon" style="background: linear-gradient(135deg, #3db9e5, #2196f3);">
                         <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
                     </div>
                     <div class="action-content">
@@ -916,7 +971,7 @@
                     </div>
                     <div class="action-arrow">
                         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
@@ -924,7 +979,8 @@
                 <a href="{{ route('apprenant.courses') }}" class="action-card">
                     <div class="action-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
                         <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                         </svg>
                     </div>
                     <div class="action-content">
@@ -933,7 +989,7 @@
                     </div>
                     <div class="action-arrow">
                         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
@@ -941,7 +997,8 @@
                 <a href="{{ route('apprenant.materials') }}" class="action-card">
                     <div class="action-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
                         <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
                         </svg>
                     </div>
                     <div class="action-content">
@@ -950,7 +1007,7 @@
                     </div>
                     <div class="action-arrow">
                         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
@@ -958,7 +1015,8 @@
                 <a href="{{ route('apprenant.progress') }}" class="action-card">
                     <div class="action-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
                         <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                         </svg>
                     </div>
                     <div class="action-content">
@@ -967,7 +1025,7 @@
                     </div>
                     <div class="action-arrow">
                         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                         </svg>
                     </div>
                 </a>
@@ -987,38 +1045,61 @@
                         <p>Vos prochaines formations</p>
                     </div>
                     <div class="card-body">
-                        @if ($activeInscriptions->isNotEmpty())
+                        @if ($recentInscriptions->isNotEmpty())
                             <div class="sessions-list">
-                                @foreach ($activeInscriptions->take(3) as $inscription)
+                                @foreach ($recentInscriptions as $inscription)
                                     <div class="session-item">
                                         <div class="session-icon">
                                             <span>{{ strtoupper(substr($inscription->session->formation->titre, 0, 1)) }}</span>
                                         </div>
                                         <div class="session-info">
-                                            <h4>{{ $inscription->session->formation->titre }}</h4>
-                                            <p>{{ \Carbon\Carbon::parse($inscription->session->date_debut)->format('d M Y') }} - {{ \Carbon\Carbon::parse($inscription->session->date_fin)->format('d M Y') }}</p>
-                                            <span class="session-location">{{ $inscription->session->lieu ?? 'Lieu non défini' }}</span>
-                                        </div>
-                                        <div class="session-status">
-                                            <span class="status-badge {{ 'badge-' . $inscription->statut }}">
-                                                {{ ucfirst(str_replace('_', ' ', $inscription->statut)) }}
+                                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                                                <h4>{{ $inscription->session->formation->titre }}</h4>
+                                                @if($inscription->statut === 'validée')
+                                                    <span class="status-badge badge-valide">
+                                                        <span class="dot"></span>
+                                                        Validée
+                                                    </span>
+                                                @elseif($inscription->statut === 'en_attente')
+                                                    <span class="status-badge badge-en_attente">
+                                                        <span class="dot"></span>
+                                                        En attente
+                                                    </span>
+                                                @elseif($inscription->statut === 'refusée')
+                                                    <span class="status-badge badge-rejetee">
+                                                        <span class="dot"></span>
+                                                        Refusée
+                                                    </span>
+                                                @endif
+                                            </div>
+
+                                            <p>
+                                                {{ \Carbon\Carbon::parse($inscription->session->date_debut)->format('d M Y') }}
+                                                -
+                                                {{ \Carbon\Carbon::parse($inscription->session->date_fin)->format('d M Y') }}
+                                            </p>
+
+                                            <span class="session-location">
+                                                {{ $inscription->session->lieu ?? 'Lieu non défini' }}
                                             </span>
                                         </div>
                                     </div>
                                 @endforeach
                             </div>
-                            @if ($activeInscriptions->count() > 3)
+                            @if ($inscriptions->count() > 3)
                                 <div class="view-more">
-                                    <a href="{{ route('apprenant.inscriptions') }}">Voir toutes mes sessions →</a>
+                                    <a href="{{ route('apprenant.inscriptions') }}">Voir toutes mes inscriptions →</a>
                                 </div>
                             @endif
                         @else
                             <div class="empty-state">
                                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M8 7V3m8 4V3M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
-                                <p>Aucune session active</p>
-                                <a href="{{ route('apprenant.inscriptions') }}" class="btn-link">S'inscrire maintenant</a>
+                                <p>Aucune inscription</p>
+                                <a href="{{ route('apprenant.inscriptions') }}" class="btn-link">S'inscrire
+                                    maintenant</a>
                             </div>
                         @endif
                     </div>
@@ -1037,10 +1118,12 @@
                                     <div class="available-session">
                                         <div class="session-details">
                                             <h4>{{ $session->formation->titre }}</h4>
-                                            <p>{{ $session->formation->description ? Str::limit($session->formation->description, 60) : 'Formation complète' }}</p>
+                                            <p>{{ $session->formation->description ? Str::limit($session->formation->description, 60) : 'Formation complète' }}
+                                            </p>
                                             <div class="session-meta">
                                                 <span>{{ \Carbon\Carbon::parse($session->date_debut)->format('d M Y') }}</span>
-                                                <span>{{ $session->capacite - $session->inscriptions()->where('statut', 'valide')->count() }} places restantes</span>
+                                                <span>{{ $session->capacite - $session->inscriptions()->where('statut', 'valide')->count() }}
+                                                    places restantes</span>
                                             </div>
                                         </div>
                                         <div class="session-action">
@@ -1061,7 +1144,8 @@
                         @else
                             <div class="empty-state">
                                 <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                                 </svg>
                                 <p>Aucune formation disponible actuellement</p>
                             </div>
@@ -1084,14 +1168,18 @@
                         <div class="progress-overview">
                             <div class="progress-circle">
                                 <svg width="120" height="120" viewBox="0 0 120 120">
-                                    <circle cx="60" cy="60" r="50" stroke="#f0f1f5" stroke-width="8" fill="none"/>
-                                    <circle cx="60" cy="60" r="50" stroke="#4F6EF7" stroke-width="8" fill="none"
-                                            stroke-dasharray="{{ 2 * 3.14159 * 50 }}"
-                                            stroke-dashoffset="{{ 2 * 3.14159 * 50 * (1 - ($enrolledFormations->count() > 0 ? 0.75 : 0)) }}"
-                                            transform="rotate(-90 60 60)"/>
+                                    <circle cx="60" cy="60" r="50" stroke="#f0f1f5" stroke-width="8"
+                                        fill="none" />
+
+                                    <circle cx="60" cy="60" r="50" stroke="#4F6EF7" stroke-width="8"
+                                        fill="none" stroke-dasharray="{{ 2 * 3.14159 * 50 }}"
+                                        stroke-dashoffset="{{ 2 * 3.14159 * 50 * (1 - ($progressPercent ?? 0) / 100) }}"
+                                        transform="rotate(-90 60 60)" />
+
                                 </svg>
+
                                 <div class="progress-text">
-                                    <span class="progress-percent">{{ $enrolledFormations->count() > 0 ? '75' : '0' }}%</span>
+                                    <span class="progress-percent">{{ $progressPercent ?? 0 }}%</span>
                                     <span class="progress-label">Complet</span>
                                 </div>
                             </div>
@@ -1124,7 +1212,8 @@
                             <div class="stat-item">
                                 <div class="stat-icon" style="background: #eff3ff; color: #4F6EF7;">
                                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                                     </svg>
                                 </div>
                                 <div class="stat-info">
@@ -1136,7 +1225,8 @@
                             <div class="stat-item">
                                 <div class="stat-icon" style="background: #f0fdf4; color: #10b981;">
                                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7 20H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v15a2 2 0 01-2 2h-2"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M9 12l2 2 4-4M7 20H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v15a2 2 0 01-2 2h-2" />
                                     </svg>
                                 </div>
                                 <div class="stat-info">
@@ -1148,7 +1238,8 @@
                             <div class="stat-item">
                                 <div class="stat-icon" style="background: #fef3e2; color: #f59e0b;">
                                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                 </div>
                                 <div class="stat-info">

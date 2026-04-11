@@ -12,7 +12,7 @@ class FrontController extends Controller
     /**
      * Display the home page
      */
-    public function index()
+    public function  index()
     {
         $formations = Formation::with('formateurs.user', 'sessions')->limit(6)->get();
         $formateurs = Formateur::with('user')->limit(4)->get();

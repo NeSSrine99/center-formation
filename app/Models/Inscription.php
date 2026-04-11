@@ -14,7 +14,6 @@ class Inscription extends Model
         'session_formation_id',
         'statut',
         'paiement',
-        'date_inscription'
     ];
 
     public function apprenant()
@@ -25,5 +24,15 @@ class Inscription extends Model
     public function session()
     {
         return $this->belongsTo(FormationSession::class, 'session_formation_id');
+    }
+
+    public function isValid()
+    {
+        return $this->statut === 'validée';
+    }
+
+    public function isPending()
+    {
+        return $this->statut === 'en_attente';
     }
 }

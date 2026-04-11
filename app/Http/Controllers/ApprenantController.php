@@ -2,172 +2,149 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Models\Formation;
 use App\Models\Inscription;
+use App\Models\FormationSession;
+use App\Models\Notification;
 
 class ApprenantController extends Controller
 {
-    /**
-     * Register the apprenant to a session.
-     */
-    public function inscrireApprenant(Request $request)
-    {
-        $request->validate([
-            'session_id' => 'required|exists:sessions_formations,id',
-        ]);
-
-        $user = Auth::user();
-        $apprenant = $user->apprenant;
-        if (!$apprenant) {
-            return back()->with('error', 'Aucun apprenant associé à cet utilisateur.');
-        }
-
-        $session = \App\Models\FormationSession::findOrFail($request->session_id);
-
-        // Check if session is open
-        if ($session->statut !== 'ouverte') {
-            return back()->with('error', 'Cette session n\'est pas ouverte aux inscriptions.');
-        }
-
-        // Prevent duplicate inscription
-        $exists = \App\Models\Inscription::where('apprenant_id', $apprenant->id)
-            ->where('session_formation_id', $session->id)
-            ->whereNotIn('statut', ['refusée'])
-            ->exists();
-        if ($exists) {
-            return back()->with('error', 'Vous êtes déjà inscrit ou avez une demande en cours pour cette session.');
-        }
-
-        // Check capacity
-        if ($session->available_places <= 0) {
-            return back()->with('error', 'Cette session est complète.');
-        }
-
-        DB::transaction(function () use ($apprenant, $session) {
-            \App\Models\Inscription::create([
-                'apprenant_id' => $apprenant->id,
-                'session_formation_id' => $session->id,
-                'statut' => 'en_attente',
-                'paiement' => false,
-            ]);
-        });
-
-        return back()->with('success', 'Votre demande d\'inscription a été soumise et est en attente de validation.');
-    }
-
-    /**
-     * Cancel/Unregister from an inscription.
-     */
-    public function annulerInscription($inscriptionId)
-    {
-        $inscription = Inscription::findOrFail($inscriptionId);
-        $user = Auth::user();
-        $apprenant = $user->apprenant;
-
-        if (!$apprenant || $inscription->apprenant_id !== $apprenant->id) {
-            return back()->with('error', 'Non autorisé.');
-        }
-
-        if (!in_array($inscription->statut, ['en_attente', 'validée'])) {
-            return back()->with('error', 'Cette inscription ne peut pas être annulée.');
-        }
-
-        DB::transaction(function () use ($inscription) {
-            $inscription->update(['statut' => 'refusée']);
-        });
-
-        return back()->with('success', 'Inscription annulée avec succès.');
-    }
-
-    /**
-     * Display the apprenant dashboard.
-     */
     public function dashboard()
     {
-        $user = Auth::user();
-        $apprenant = $user->apprenant;
+        $apprenant = Auth::user()->apprenant;
 
         if (!$apprenant) {
             return redirect('/')->with('error', 'Profil apprenant non trouvé.');
         }
 
-        // Formations where the apprenant has valid inscriptions
+        //  inscriptions + formationSession + formation
+        $inscriptions = $apprenant->inscriptions()
+            ->with('session.formation')
+            ->get();
+
+        //  sessions actives
+        $activeInscriptions = $inscriptions->whereIn('statut', ['validée', 'en_attente']);
+
+        //  toutes les inscriptions récentes pour le dashboard
+        $recentInscriptions = $inscriptions->sortByDesc('created_at')->take(3);
+
+        //  formations validées
         $enrolledFormations = Formation::whereHas('sessions.inscriptions', function ($q) use ($apprenant) {
-            $q->where('apprenant_id', $apprenant->id)->where('statut', 'validée');
+            $q->where('apprenant_id', $apprenant->id)
+              ->where('statut', 'validée');
         })->get();
 
-        // Active inscriptions (validée)
-        $activeInscriptions = $apprenant->inscriptions()->where('statut', 'validée')->with('session.formation')->get();
-
-        // Available sessions (open and have available places)
-        $availableSessions = \App\Models\FormationSession::where('statut', 'ouverte')
-            ->whereDoesntHave('inscriptions', function ($q) use ($apprenant) {
-                $q->where('apprenant_id', $apprenant->id)->where('statut', 'validée');
-            })
+        //  sessions disponibles
+        $availableSessions = FormationSession::with('formation')
+            ->withCount([
+                'inscriptions as valid_count' => function ($q) {
+                    $q->where('statut', 'validée');
+                }
+            ])
+            ->where('statut', 'ouverte')
             ->get()
-            ->filter(function ($session) {
-                return $session->available_places > 0;
+            ->filter(function ($session) use ($apprenant) {
+
+                $alreadyRegistered = $session->inscriptions()
+                    ->where('apprenant_id', $apprenant->id)
+                    ->exists();
+
+                return !$alreadyRegistered &&
+                    ($session->capacite > $session->valid_count);
             });
 
-        // User level
-        $userLevel = $apprenant->niveau;
+        //  LEVEL
+        $userLevel = match (true) {
+            $enrolledFormations->count() >= 5 => 'Avancé',
+            $enrolledFormations->count() >= 2 => 'Intermédiaire',
+            default => 'Débutant',
+        };
 
-        return view('apprenant.dashboard', compact('enrolledFormations', 'activeInscriptions', 'availableSessions', 'userLevel'));
+        $totalFormations = $enrolledFormations->count();
+
+        $completedSessions = $inscriptions->filter(function ($inscription) {
+            return $inscription->statut === 'validée'
+                && $inscription->formationSession
+                && $inscription->formationSession->date_fin < now();
+        })->count();
+
+        $progressPercent = $totalFormations > 0
+            ? round(($completedSessions / $totalFormations) * 100)
+            : 0;
+
+        return view('apprenant.dashboard', compact(
+            'inscriptions',
+            'activeInscriptions',
+            'recentInscriptions',
+            'enrolledFormations',
+            'availableSessions',
+            'userLevel',
+            'progressPercent'
+        ));
     }
 
-    /**
-     * Show the list of courses.
-     */
     public function courses()
     {
         return view('apprenant.courses');
     }
 
-    /**
-     * Show the progress of the apprenant.
-     */
     public function progress()
     {
         return view('apprenant.progress');
     }
 
-    /**
-     * Show course materials.
-     */
     public function materials()
     {
         return view('apprenant.materials');
     }
 
-    /**
-     * Show inscriptions.
-     */
     public function inscriptions()
     {
-        $user = Auth::user();
-        $apprenant = $user->apprenant;
-        $myFormations = $apprenant
-            ? Formation::with('formateurs.user', 'sessions.inscriptions')
-            ->whereHas('sessions.inscriptions', function ($q) use ($apprenant) {
-                $q->where('apprenant_id', $apprenant->id);
-            })->get()
-            : collect();
-        $inscriptions = $apprenant ? $apprenant->inscriptions()->with('session.formation')->get() : collect();
+        $apprenant = Auth::user()->apprenant;
 
-        // Get formations the apprenant is NOT already registered for
-        $registeredFormationIds = $myFormations->pluck('id')->toArray();
-        $formations = Formation::with('formateurs.user')->whereNotIn('id', $registeredFormationIds)->get();
+        if (!$apprenant) {
+            return back()->with('error', 'Profil apprenant non trouvé.');
+        }
 
-        // Get sessions for formations the apprenant is not registered for, and only open sessions
-        $sessions = \App\Models\FormationSession::with('formation.formateurs.user')
-            ->whereHas('formation', function ($q) use ($registeredFormationIds) {
-                $q->whereNotIn('id', $registeredFormationIds);
-            })
-            ->where('statut', 'ouverte')
+        $inscriptions = $apprenant->inscriptions()
+            ->with('session.formation')
             ->get();
-        return view('apprenant.inscriptions', compact('myFormations', 'inscriptions', 'formations', 'sessions'));
+
+        $myFormations = Formation::whereHas('sessions.inscriptions', function ($q) use ($apprenant) {
+            $q->where('apprenant_id', $apprenant->id);
+        })->get();
+
+        $sessions = FormationSession::where('statut', 'ouverte')->get();
+
+        return view('apprenant.inscriptions', compact(
+            'inscriptions',
+            'myFormations',
+            'sessions'
+        ));
+    }
+
+    /**
+     * Marquer une notification comme lue
+     */
+    public function markNotificationRead($id)
+    {
+        $notification = Notification::where('user_id', auth()->id())
+            ->findOrFail($id);
+
+        $notification->update(['read' => true]);
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Marquer toutes les notifications comme lues
+     */
+    public function markAllNotificationsRead()
+    {
+        Notification::where('user_id', auth()->id())
+            ->update(['read' => true]);
+
+        return response()->json(['success' => true]);
     }
 }
