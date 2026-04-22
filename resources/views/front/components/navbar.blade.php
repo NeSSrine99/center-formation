@@ -87,14 +87,20 @@
                 </li>
             @else
                 <!-- GUEST BUTTONS -->
-                <div class="d-flex ms-3">
-                    <a href="{{ route('login') }}" class="btn btn-outline-primary me-2">
+                <div class="d-flex ms-3 align-items-center">
+
+                    <!-- LOGIN -->
+                    <a href="{{ route('login') }}"
+                        class="btn btn-outline-primary me-2 px-4 py-2 rounded-pill fw-semibold custom-login">
                         Se connecter
                     </a>
 
-                    <a href="{{ route('register') }}" class="btn btn-primary d-none d-lg-block">
+                    <!-- REGISTER -->
+                    <a href="{{ route('register') }}"
+                        class="btn btn-primary px-4 py-2 rounded-pill fw-semibold shadow custom-register d-none d-lg-block">
                         S'inscrire
                     </a>
+
                 </div>
             @endauth
 
